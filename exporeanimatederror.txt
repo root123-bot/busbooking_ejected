@@ -1,0 +1,1 @@
+You should run the "expo start -c" after add the 'reanimated' configuration

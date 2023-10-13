@@ -1,0 +1,72 @@
+in most case i don't know maybe this is because of poor internet connection or what but i don't think there 
+is the issue of intenet connection what its error is that it can't resolve json() of this 
+
+    response.json().then((output) => {
+    console.log("IM THROW THE ERROR");
+    throw new Error(output);
+    })
+
+
+what happen is that the above code does not executed instead it return Promise Rejection which then 
+make my code break; that all... so i tried to do "throw new Error({ message: "User already exist" });"
+its good... so i don't know what happen while my code in my server its good i don't understand for sure
+i don't know... SO NOW "throw new Error(output) is not executed in above block since it failed to json()
+ndo maana nilikuwa nashangaa mbona kila kitu nime-handle vizuri but bado napokea error sababu ni hii ya
+hapa juu... THE BELOW CODE IS WORKING AFTER COMMENTING OUT THE ABOVE CODE
+
+AND WHAT YOU SHOULD KNOW IS THAT IF ABOVE CODE FAILED TO EXECUTE AS IT RESOLVE ERROR IT CAUSES IT TO ENTER
+THE .then() block which cause our then block to return "undefined" THIS IS WHAT HAPPENED IF YOU HAVE THE 
+TOP BLOCK PROMISE REJECTION AND THAT PROMISE REJECTION IS NOT HANDLED IT MAKES THE .then() BLOCK TO BE executed
+AND THAT'S WHY IN MOST CASE WE GET THE RESPONSE OF "undefined" SINCE OUR THEN BLOCK WANTS DATA TO BE PASSED TO
+ITS VARIABLE AND IF ITS NOT PASSED THAT VARIABLE IS MARKED 'undefined' WHICH IN OUR CASE ITS THAT VARIALBE 
+WHICH WE RETURN so this is caused to have 'undefined'
+
+export const registerUser = async (phone_number, usergroup, pin, deviceID) => {
+  return fetch(`${BASE_URL}/api/register/`, {
+    method: "POST",
+    body: JSON.stringify({
+      phone_number,
+      usergroup,
+      pin,
+      deviceID,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      if (response.status === 200) {
+        console.log("IM HAVING STATUS CODE OF 200");
+        return response.json();
+      } else {
+        // hii block ndo ina-shida on how to convert the response in json(), that's why it
+        // failed to throw the error defined within it... That's all, I hope you understand
+        // so how we'll handle this..
+        {
+          /*
+            response.json().then((output) => {
+            console.log("IM THROW THE ERROR");
+            throw new Error(output);
+        }); */
+        }
+        throw new Error({ message: "User already exist" });
+      }
+    })
+    .then((data) => {
+      console.log("WHY IM RESOLVED WHEN WE THROW THE ERROR");
+      return Promise.resolve({ data });
+    })
+    .catch((error) => {
+      console.log("THIS IS CATCHED ERROR ", error);
+      return Promise.reject({ error });
+    });
+};
+
+
+
+// THEN HOW WE DETECT IF THE GIVEN ERROR IS OF WHAT WE WANT FOR EXAMPLE HOW TO DETECT THE
+USER EXIST IF IT FAILED TO RESOLVE .json() MESSAGE FROM SERVER TO KNOW IF THE THE ERROR 
+IS WHAT WE TARGET, OK THE CHEATCODE HERE IS TO CHECK THE STATUS CODE FOR EXAMPLE FOR THAT 
+ERROR IN MY SERVER I RESOLVE STATUS OF 409 IF I RECEIVE THSI STATUS I KNOW OK THE USER EXIST
+THIS REQUIRE NO EFFORT OF ME TRY TO .json() TO RESOLVE THE ERROR MESSAGE WHICH CAUSES THE 
+ABOVE ERRORS... 

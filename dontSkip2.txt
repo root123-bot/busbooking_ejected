@@ -1,0 +1,29 @@
+The reason behind having this folder is to 
+code for both the ios and android, there 
+are lottie_ios and react-native_lottie 
+package version conflicts if i will use 
+given version it only support in android 
+and not in ios, the same the other versions 
+support in ios and not in android. For that 
+reason i have two folders of 
+'BusBooking_ios' and 'BusBooking_android' 
+this files contains the  package which will 
+work fine with given plaform. So in order 
+to avoid us from writting codes for both 
+plaform due to this conflicts i created 
+this folder which first i will install all 
+required 'Pods' which version that support 
+in iOS as you know the iOS is watching the 
+'Pods' when it run and not the 
+'package.json' and we generate 'Pods' only 
+once, so we will generate Pods which 
+packages required for 'IOS' then for 
+android since it depend on 'package.json' 
+the next step is to have packages required 
+for android and run our application so the 
+point of note here is final package.json of 
+these 'lottie' packages contains the 
+configuration/version required for android 
+which its okay since we're already 
+generated "Pods" using the package required 
+by ios
