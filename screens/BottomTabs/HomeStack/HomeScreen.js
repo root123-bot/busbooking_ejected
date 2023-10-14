@@ -861,6 +861,9 @@ function HomeScreen({ navigation }) {
                   left={<TextInput.Icon icon="calendar-range-outline" />}
                   value={departureDate.toDateString()}
                   label={"Departure"}
+                  style={{
+                    width: "60%",
+                  }}
                 />
                 <TextInput
                   mode="outlined"
@@ -870,6 +873,9 @@ function HomeScreen({ navigation }) {
                   value={"1"}
                   label={"Passengers"}
                   activeOutlineColor="black"
+                  style={{
+                    width: "35%",
+                  }}
                 />
               </View>
             </View>

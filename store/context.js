@@ -162,6 +162,7 @@ function AppContextProvider({ children }) {
   async function executeUserMetadata() {
     let user_id = await AsyncStorage.getItem("user_id");
     let phone_number = await AsyncStorage.getItem("phone_number");
+    console.log("LOGIN CREDENTIALS HERE ", phone_number, user_id);
     setLastLoginPhoneNumber(phone_number);
 
     if (user_id) {

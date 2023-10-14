@@ -59,6 +59,7 @@ function PickSeatsScreen({ route, navigation }) {
     }
     navigation.navigate("FillPassengerInfo", {
       metadata,
+      bookedSeats: bookedSeat,
     });
   };
   return (

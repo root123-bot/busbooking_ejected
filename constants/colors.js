@@ -5,4 +5,6 @@ export const COLORS = {
   darkprimary: "#005f80",
   background: "#E9ECEF",
   lightGrey: "#495057",
+  warning: "#ffb700",
+  danger: "#D64933",
 };

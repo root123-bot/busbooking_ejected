@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { memo, useState } from "react";
+import React, { memo, useState, useContext } from "react";
 import {
   View,
   Text,
@@ -14,8 +14,81 @@ import { HelperText, Button } from "react-native-paper";
 import * as RNPaper from "react-native-paper";
 import { CustomLine } from "../../../components/ui";
 import PhoneInput from "react-native-phone-number-input";
+import { AppContext } from "../../../store/context";
+import { computeTimeTo12Format } from "../../../utils";
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  Easing,
+  withRepeat,
+  withTiming,
+} from "react-native-reanimated";
+import Svg, { Circle } from "react-native-svg";
+
+// https://dereckquock.com/react-native-looping-opacity-animation
+function BlinkingView() {
+  const opacity = useSharedValue(0.4); // this is lowest opacity to use
+
+  // Set the opacity value to animate between 0 and 1
+  opacity.value = withRepeat(
+    withTiming(1, { duration: 500, easing: Easing.ease }),
+    -1,
+    true
+  );
+
+  const style = useAnimatedStyle(() => ({ opacity: opacity.value }), []);
+
+  return (
+    <Animated.View style={style}>
+      <Svg
+        style={{
+          width: "100%",
+          height: 40,
+        }}
+        viewBox="0 0 100 100"
+      >
+        <View
+          style={{
+            backgroundColor: COLORS.danger,
+            width: "100%",
+            height: "100%",
+            padding: 5,
+            paddingTop: 6,
+            paddingHorizontal: 10,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <RNPaper.Text
+            style={{
+              fontSize: 17,
+              color: "white",
+              fontFamily: "overpass-reg",
+            }}
+          >
+            Remaining time to pay ticket{" "}
+          </RNPaper.Text>
+        </View>
+      </Svg>
+    </Animated.View>
+  );
+}
+
 function FillPassengerInfo({ route, navigation }) {
-  const { metadata } = route.params;
+  const AppCtx = useContext(AppContext);
+
+  const animation = useSharedValue(1);
+  const animationStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(animation.value, {
+        duration: 1000,
+      }),
+    };
+  });
+
+  const { metadata, bookedSeats } = route.params;
+  // console.log("Booked Seats ", bookedSeats);
+  // console.log("METADATA ", metadata);
   const [name, setName] = useState({
     value: "",
     isValid: true,
@@ -34,7 +107,7 @@ function FillPassengerInfo({ route, navigation }) {
   const paymentHandler = () => {
     const nameValid = name.value.trim().length > 0;
     const firstPhoneValid =
-      firstPhone.value.trim().length > 9 && !firstPhone.value.startsWith("0");
+      firstPhone.value.trim().length === 9 && !firstPhone.value.startsWith("0");
 
     const formattedValueValid = formattedValue.length === 13;
 
@@ -124,10 +197,11 @@ function FillPassengerInfo({ route, navigation }) {
                             fontWeight: "bold",
                             fontFamily: "overpass-reg",
                             marginTop: 5,
+                            textTransform: "capitalize",
                           }}
                           numberOfLines={1}
                         >
-                          Dar es salaam
+                          {AppCtx.userTripMetadata.from}
                         </Text>
                       </View>
                       <View
@@ -156,10 +230,11 @@ function FillPassengerInfo({ route, navigation }) {
                               fontWeight: "bold",
                               fontFamily: "overpass-reg",
                               marginTop: 5,
+                              textTransform: "capitalize",
                             }}
                             numberOfLines={1}
                           >
-                            Mombasa
+                            {AppCtx.userTripMetadata.destination}
                           </Text>
                         </View>
                       </View>
@@ -176,7 +251,7 @@ function FillPassengerInfo({ route, navigation }) {
                           fontSize: 12,
                           fontFamily: "overpass-reg",
                         }}
-                      >{`${new Date().toDateString()}`}</Text>
+                      >{`${AppCtx.userTripMetadata.departureDate.toDateString()}`}</Text>
                     </View>
                   </View>
                   <View
@@ -228,9 +303,10 @@ function FillPassengerInfo({ route, navigation }) {
                     marginBottom: 0,
                     fontWeight: "bold",
                     color: COLORS.lightGrey,
+                    textTransform: "capitalize",
                   }}
                 >
-                  BUS #092
+                  {metadata.bus_info.bus_name}
                 </RNPaper.Text>
                 <HelperText
                   padding="none"
@@ -242,7 +318,9 @@ function FillPassengerInfo({ route, navigation }) {
                   }}
                 >
                   Plate:{" "}
-                  <Text style={{ fontFamily: "overpass-reg" }}>T123ABC</Text>
+                  <Text style={{ fontFamily: "overpass-reg" }}>
+                    {metadata.bus_info.plate_number}
+                  </Text>
                 </HelperText>
               </View>
               <View>
@@ -252,7 +330,7 @@ function FillPassengerInfo({ route, navigation }) {
                     color: COLORS.darkprimary,
                   }}
                 >
-                  9:30 AM
+                  {computeTimeTo12Format(metadata.bus_departure_time)}
                 </RNPaper.Text>
               </View>
             </View>
@@ -309,7 +387,7 @@ function FillPassengerInfo({ route, navigation }) {
                             color: COLORS.lightGrey,
                           }}
                         >
-                          Total seats: 3
+                          Total seats: {bookedSeats.length}
                         </Text>
                         <Text
                           style={{
@@ -317,7 +395,8 @@ function FillPassengerInfo({ route, navigation }) {
                             color: COLORS.lightGrey,
                           }}
                         >
-                          Seat Labels: 1, 8, 10
+                          Seat Label(s):{" "}
+                          {bookedSeats.map((val) => val.seatNo).join(", ")}
                         </Text>
                       </View>
                       <View></View>
@@ -388,16 +467,24 @@ function FillPassengerInfo({ route, navigation }) {
                       marginVertical: 10,
                       marginTop: 0,
                     }}
+                    autoCorrect={false}
+                    autoComplete="off"
                     value={name.value}
                     activeOutlineColor={name.isValid ? COLORS.lightGrey : "red"}
                     outlineColor={name.isValid ? COLORS.lightGrey : "red"}
+                    onChangeText={(text) => {
+                      setName((prevState) => ({
+                        ...prevState,
+                        value: text,
+                      }));
+                    }}
                   />
                   <PhoneInput
                     defaultValue={firstPhone.value}
                     defaultCode="TZ"
                     layout="first"
                     onChangeText={(text) => {
-                      setPhone({ value: text, isValid: true });
+                      setFirstPhone({ value: text, isValid: true });
                     }}
                     onChangeFormattedText={(text) => {
                       setFormattedValue(text);
@@ -421,7 +508,7 @@ function FillPassengerInfo({ route, navigation }) {
                     defaultCode="TZ"
                     layout="first"
                     onChangeText={(text) => {
-                      setPhone({ value: text, isValid: true });
+                      setSecondPhone({ value: text, isValid: true });
                     }}
                     onChangeFormattedText={(text) => {
                       setSecondFormattedValue(text);
@@ -463,39 +550,42 @@ function FillPassengerInfo({ route, navigation }) {
               backgroundColor: "#E5E5E5",
             }}
           >
-            <View
-              style={{
-                width: "100%",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: 10,
-                paddingHorizontal: 20,
-                borderTopColor: "grey",
-                borderTopWidth: 0.5,
-              }}
-            >
+            <View>
+              <BlinkingView />
+
               <View
                 style={{
-                  width: "40%",
+                  borderTopColor: "grey",
+                  borderTopWidth: 0.5,
+                  width: "100%",
+                  padding: 10,
+                  paddingHorizontal: 20,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
                 }}
               >
                 <View
                   style={{
-                    flexDirection: "row",
-                    alignItems: "flex-end",
+                    width: "40%",
                   }}
                 >
-                  <Text
+                  <View
                     style={{
-                      fontFamily: "montserrat-17",
-                      fontSize: 25,
-                      color: COLORS.darkprimary,
+                      flexDirection: "row",
+                      alignItems: "flex-end",
                     }}
                   >
-                    $250
-                  </Text>
-                  {/* <Text
+                    <Text
+                      style={{
+                        fontFamily: "montserrat-17",
+                        fontSize: 25,
+                        color: COLORS.darkprimary,
+                      }}
+                    >
+                      ${metadata.bus_fare * bookedSeats.length}
+                    </Text>
+                    {/* <Text
                   style={{
                     fontSize: 15,
                     fontFamily: "overpass-reg",
@@ -504,22 +594,23 @@ function FillPassengerInfo({ route, navigation }) {
                 >
                   /4seat
                 </Text> */}
+                  </View>
                 </View>
+                <RNPaper.Button
+                  mode="contained"
+                  style={{
+                    width: "50%",
+                    backgroundColor: COLORS.darkprimary,
+                    borderRadius: 20,
+                  }}
+                  labelStyle={{
+                    fontWeight: "bold",
+                  }}
+                  onPress={paymentHandler}
+                >
+                  Pay now
+                </RNPaper.Button>
               </View>
-              <RNPaper.Button
-                mode="contained"
-                style={{
-                  width: "50%",
-                  backgroundColor: COLORS.darkprimary,
-                  borderRadius: 20,
-                }}
-                labelStyle={{
-                  fontWeight: "bold",
-                }}
-                onPress={paymentHandler}
-              >
-                Pay now
-              </RNPaper.Button>
             </View>
           </View>
         </View>
