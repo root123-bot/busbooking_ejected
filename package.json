@@ -57,6 +57,7 @@
     "prettier": "^2.8.8",
     "react": "18.2.0",
     "react-native": "0.71.13",
+    "react-native-countdown-timer-hooks": "^1.0.4",
     "react-native-elements": "^3.4.3",
     "react-native-expo-image-cache": "^4.1.0",
     "react-native-gesture-handler": "~2.9.0",

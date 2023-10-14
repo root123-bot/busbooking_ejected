@@ -140,7 +140,7 @@ export const CustomizedLottieMessage = ({
           <Text
             style={{
               fontFamily: "montserrat-17",
-              color: COLORS.secondary,
+              color: "white",
               fontSize: 20,
               textAlign: "center",
               marginTop: "2%",
@@ -159,7 +159,7 @@ export const CustomizedLottieMessage = ({
           <HelperText
             style={{
               fontFamily: "montserrat-17",
-              color: COLORS.secondary,
+              color: "white",
               marginBottom: 0,
               paddingBottom: 0,
             }}
