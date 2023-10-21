@@ -311,7 +311,7 @@ function HomeScreen({ navigation }) {
       .filter((trip) =>
         trip.day.toLowerCase() === day.toLowerCase() &&
         trip.bus_info.bookings_metadata.length === 0
-          ? true
+          ? trip.bus_info.seat_layout.total_seats >= passengers
           : trip.bus_info.bookings_metadata.filter(
               (value) =>
                 getDayName(new Date(value.trip_date).getDay()).toLowerCase() ===
@@ -325,7 +325,7 @@ function HomeScreen({ navigation }) {
   our api so there is no way to have filtered trips and be the same, and if we have the same trip of the same 
   bus then it will be of different time then no need to have logic to remove duplicates, THANK YOU GOD! 
 */
-    console.log("RESULTS ", result);
+    console.log("RESULTS ", JSON.stringify(result));
     // console.log("ACTUAL DATA ", result[0].bus_info.bookings_metadata);
     // console.log("SECOND ONE ", result[1].bus_info.bookings_metadata);
 
