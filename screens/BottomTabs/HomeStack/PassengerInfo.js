@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   Dimensions,
   ScrollView,
+  Alert,
 } from "react-native";
 import { COLORS } from "../../../constants/colors";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
@@ -28,6 +29,7 @@ import Svg from "react-native-svg";
 import CountDownTimer from "react-native-countdown-timer-hooks";
 import { CustomizedLottieMessage } from "../../../components/Messages";
 import { Animation } from "../../../components/ui";
+import { DeleteBooking } from "../../../utils/requests";
 
 const { width } = Dimensions.get("window");
 // https://dereckquock.com/react-native-looping-opacity-animation
@@ -79,7 +81,7 @@ function BlinkingView({ timeIsUpHandler }) {
         >
           <RNPaper.Text
             style={{
-              fontSize: 17,
+              fontSize: 16,
               color: "white",
               fontFamily: "overpass-reg",
             }}
@@ -122,9 +124,10 @@ function FillPassengerInfo({ route, navigation }) {
     };
   });
 
-  const { metadata, bookedSeats } = route.params;
+  const { metadata, bookedSeats, booking_id } = route.params;
   // console.log("Booked Seats ", bookedSeats);
   // console.log("METADATA ", metadata);
+  console.log("Booking id ", booking_id);
   const [name, setName] = useState({
     value: "",
     isValid: true,
@@ -206,7 +209,7 @@ function FillPassengerInfo({ route, navigation }) {
                 paddingBottom: 0,
               }}
             >
-              {"Timeout Error"}
+              {"Timeout Reached"}
             </Text>
             <CustomLine
               style={{
@@ -214,30 +217,35 @@ function FillPassengerInfo({ route, navigation }) {
                 paddingBottom: 0,
               }}
             />
-            <HelperText
+            <View
               style={{
-                fontFamily: "montserrat-17",
-                color: "white",
-                marginBottom: 0,
-                paddingBottom: 0,
+                width: width * 0.7,
               }}
-              numberOfLines={1}
             >
-              {"The booked seats has been released."}
-            </HelperText>
-            <View>
-              <Animation
-                style={[
-                  {
-                    width: width * 0.7,
-                    marginTop: 0,
-                    alignSelf: "center",
-                    paddingTop: 0,
-                    aspectRatio: 1,
-                  },
-                ]}
-                source={require("../../../assets/LottieAnimations/animation_lnqngcwe.json")}
-              />
+              <HelperText
+                style={{
+                  fontFamily: "montserrat-17",
+                  color: "white",
+                  marginBottom: 0,
+                  paddingBottom: 0,
+                }}
+              >
+                {"The seats you've selected has been released."}
+              </HelperText>
+              <View>
+                <Animation
+                  style={[
+                    {
+                      width: width * 0.7,
+                      marginTop: 0,
+                      alignSelf: "center",
+                      paddingTop: 0,
+                      aspectRatio: 1,
+                    },
+                  ]}
+                  source={require("../../../assets/LottieAnimations/animation_lnqngcwe.json")}
+                />
+              </View>
             </View>
             <Button
               labelStyle={{
@@ -249,15 +257,26 @@ function FillPassengerInfo({ route, navigation }) {
                   alignSelf: "center",
                   backgroundColor: COLORS.danger,
                   marginBottom: "2%",
+                  width: width * 0.7,
                 },
               ]}
+              onPress={() =>
+                navigation.navigate("PickSeatsScreen", {
+                  metadata,
+                })
+              }
             >
               Book again
             </Button>
           </View>
         </View>
         <View
-          style={styles.container}
+          style={[
+            styles.container,
+            {
+              opacity: showTimeoutError ? 0.4 : 1,
+            },
+          ]}
           pointerEvents={showTimeoutError ? "none" : "auto"}
         >
           <View style={styles.container}>
@@ -292,11 +311,25 @@ function FillPassengerInfo({ route, navigation }) {
                       }}
                     >
                       <TouchableOpacity
-                        onPress={() =>
+                        onPress={() => {
+                          const formData = new FormData();
+                          formData.append("booking_id", booking_id);
+                          DeleteBooking(formData).catch((err) => {
+                            console.log("Error occured in deleting booking");
+                            Alert.alert(
+                              "Something went wrong",
+                              `${err.toString()}`,
+                              [
+                                {
+                                  text: "Okay",
+                                },
+                              ]
+                            );
+                          });
                           navigation.navigate("PickSeatsScreen", {
                             metadata,
-                          })
-                        }
+                          });
+                        }}
                       >
                         <Ionicons name="arrow-back" size={24} color="white" />
                       </TouchableOpacity>
@@ -561,7 +594,7 @@ function FillPassengerInfo({ route, navigation }) {
                   shadowRadius: 3.84,
                   marginVertical: 10,
                   marginTop: 20,
-                  marginBottom: 100,
+                  marginBottom: 150,
                 }}
               >
                 <View
@@ -685,9 +718,33 @@ function FillPassengerInfo({ route, navigation }) {
               }}
             >
               <View>
-                <BlinkingView
-                  timeIsUpHandler={() => setShowTimeoutError(true)}
-                />
+                {!showTimeoutError && (
+                  <BlinkingView
+                    timeIsUpHandler={() => {
+                      setShowTimeoutError(true);
+
+                      // let's delete  that booking
+                      const formData = new FormData();
+                      formData.append("booking_id", booking_id);
+                      DeleteBooking(formData)
+                        .then((data) => {
+                          console.log("Data ", data);
+                        })
+                        .catch((err) => {
+                          console.log("Error occured in deleting booking");
+                          Alert.alert(
+                            "Something went wrong",
+                            `${err.toString()}`,
+                            [
+                              {
+                                text: "Okay",
+                              },
+                            ]
+                          );
+                        });
+                    }}
+                  />
+                )}
 
                 <View
                   style={{

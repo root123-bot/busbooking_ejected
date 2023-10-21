@@ -228,3 +228,55 @@ export const UpdateAvatar = async (user_id, avatar_id) => {
     .then((data) => Promise.resolve(data))
     .catch((error) => Promise.reject(error));
 };
+
+/*
+  KUNA KITU NIMEGUNDUA NA KUJIFUNZA INAKUWA NGUMU SANA KUTEGEMEA HIZI .then() and .catch()
+  BLOCK ZA HAPA CHINI IF THE ABOVE CODE IS ASYNCHONOUS LETS SAY WE SHOULD WAIT THE ERROR SEATS
+  MESSAGE FROM THE SERVER IN THE CASE HAPPENED BELOW FOR THIS CASE SINCE WE WANT THE CODE 
+  CONTINUE EXECUTION DOWN THESE BELOW .then() and catch() 'Promise.resolve()' AND IT RESOLVE
+  data of 'undefined' hii imenitokea its okay if we thow the Error() which is instantly just a
+  string which does not await ... so for that case i came to know to solve this we should
+  make sure each if else statement handle individual the .then() and .catch() block instead of
+  depending on these general down .then() and catch() and here this is my first 
+  time i will implement this logic since its server should tell us which seats has been already
+  occupied so due to waiting it make things complicated. thats all 
+*/
+export const CreateBooking = async (formData) => {
+  return fetch(`${BASE_URL}/api/createbooking/`, {
+    method: "POST",
+    body: formData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (response.ok) {
+      return response.json().then((data) => Promise.resolve(data));
+    } else if (response.status === 409) {
+      return response.json().then((data) => {
+        return Promise.reject(data.details);
+      });
+    } else {
+      return response.json().then((data) => {
+        return Promise.reject(data.details);
+      });
+    }
+  });
+};
+
+export const DeleteBooking = async (formData) => {
+  return fetch(`${BASE_URL}/api/deletebooking/`, {
+    method: "POST",
+    body: formData,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (response.ok) {
+      return response.json().then((data) => Promise.resolve("Success"));
+    } else {
+      return response.json().then((data) => {
+        return Promise.reject(data.details);
+      });
+    }
+  });
+};
