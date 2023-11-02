@@ -40,6 +40,7 @@ import EnterOTPScreen from "./screens/BottomTabs/ProfileStack/Auth/EnterOTPScree
 import SetPinScreen from "./screens/BottomTabs/ProfileStack/Auth/SetPinScreen";
 import ForgotPassword from "./screens/BottomTabs/ProfileStack/Auth/ForgotPassword";
 import PickAvatarScreen from "./screens/BottomTabs/ProfileStack/PickAvatar";
+import Payment from "./screens/BottomTabs/HomeStack/Payment";
 
 const Stack = createNativeStackNavigator();
 const Stack1 = createStackNavigator();
@@ -127,6 +128,7 @@ function HomeStack() {
       <Stack.Screen name="BusDetailsScreen" component={BusDetailsScreen} />
       <Stack.Screen name="PickSeatsScreen" component={PickSeatsScreen} />
       <Stack.Screen name="FillPassengerInfo" component={FillPassengerInfo} />
+      <Stack.Screen name="Payment" component={Payment} />
     </Stack.Navigator>
   );
 }

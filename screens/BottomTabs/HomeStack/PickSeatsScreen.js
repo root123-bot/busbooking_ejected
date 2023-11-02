@@ -92,6 +92,9 @@ function PickSeatsScreen({ route, navigation }) {
         setMessage("Success");
         setIcon("check");
         setShowAnimation(false);
+        AppCtx.manipulatePickSeatScreenMetadata({
+          booking_id: result.id,
+        });
         setTimeout(() => {
           setFormSubmitLoader(false);
           navigation.navigate("FillPassengerInfo", {

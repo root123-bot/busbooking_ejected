@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { memo, useState, useContext, useRef } from "react";
+import React, { memo, useState, useContext, useRef, useEffect } from "react";
 import {
   View,
   Text,
@@ -34,7 +34,7 @@ import { DeleteBooking } from "../../../utils/requests";
 const { width } = Dimensions.get("window");
 // https://dereckquock.com/react-native-looping-opacity-animation
 // https://github.com/shubhambathe1/react-native-countdown-timer-hooks
-function BlinkingView({ timeIsUpHandler }) {
+function BlinkingView({ timeIsUpHandler, metadata, needrefresh }) {
   const refTimer = useRef();
 
   const [timerEnd, setTimerEnd] = useState(false);
@@ -43,6 +43,7 @@ function BlinkingView({ timeIsUpHandler }) {
     setTimerEnd(timerFlag);
 
     // alert("Time is up");
+    console.log("HEY TIME IS UP NOW");
     timeIsUpHandler();
   };
 
@@ -91,7 +92,12 @@ function BlinkingView({ timeIsUpHandler }) {
           <View style={{ display: timerEnd ? "none" : "flex" }}>
             <CountDownTimer
               ref={refTimer}
-              timestamp={30}
+              // timestamp={
+              //   metadata.booking_timeout_to_pay_for_each_cycle
+              //     ? metadata.booking_timeout_to_pay_for_each_cycle * 60
+              //     : 15 * 60
+              // }
+              timestamp={needrefresh ? 50 : 30}
               timerCallback={timerCallbackFunc}
               containerStyle={{
                 height: 40,
@@ -124,7 +130,8 @@ function FillPassengerInfo({ route, navigation }) {
     };
   });
 
-  const { metadata, bookedSeats, booking_id } = route.params;
+  const { metadata, bookedSeats, booking_id, needrefresh } = route.params;
+
   // console.log("Booked Seats ", bookedSeats);
   // console.log("METADATA ", metadata);
   console.log("Booking id ", booking_id);
@@ -142,7 +149,10 @@ function FillPassengerInfo({ route, navigation }) {
   });
   const [formattedValue, setFormattedValue] = useState("+255");
   const [secondFormattedValue, setSecondFormattedValue] = useState("+255");
-  const [showTimeoutError, setShowTimeoutError] = useState(false);
+  const [showTimeoutError, setShowTimeoutError] = useState(0);
+  const [iNeedToPayNow, setINeedToPayNow] = useState(false);
+  const [shouldRemoveFirstBlinkingView, setShouldRemoveFirstBlinkingView] =
+    useState(false);
 
   const paymentHandler = () => {
     const nameValid = name.value.trim().length > 0;
@@ -164,9 +174,26 @@ function FillPassengerInfo({ route, navigation }) {
       return;
     }
 
-    // lets check validity if the seat user has booked are still exist
-    // or its already taken
+    // the seat should be available, so we should first make the logic of counting timer not working again before
+    // we submit data, remember we take our logic in "timeIsUpHandler"
+    //
+    setINeedToPayNow(true);
+    // i think we still need to set time count, and you know what if the request to pay for
+    // ticket fail which is unlikely we need to set need to paynow false... but i think this
+    // counter if user click payNow should disappear since its easy task of taking the user to next page
+
+    // lets navigate to payment
+    setShouldRemoveFirstBlinkingView(true);
+    navigation.navigate("Payment", {
+      metadata,
+      bookedSeats,
+      booking_id,
+    });
   };
+
+  useEffect(() => {
+    console.log("THIS IS VALUE OF TIMEOUT ERROR ", showTimeoutError);
+  }, [showTimeoutError]);
 
   return (
     <>
@@ -643,6 +670,7 @@ function FillPassengerInfo({ route, navigation }) {
                         setName((prevState) => ({
                           ...prevState,
                           value: text,
+                          isValid: true,
                         }));
                       }}
                     />
@@ -718,33 +746,79 @@ function FillPassengerInfo({ route, navigation }) {
               }}
             >
               <View>
-                {!showTimeoutError && (
-                  <BlinkingView
-                    timeIsUpHandler={() => {
-                      setShowTimeoutError(true);
+                {shouldRemoveFirstBlinkingView &&
+                  needrefresh &&
+                  !showTimeoutError && (
+                    <BlinkingView
+                      metadata={metadata}
+                      needrefresh={needrefresh}
+                      timeIsUpHandler={() => {
+                        if (!needrefresh && iNeedToPayNow) {
+                          console.log("THIS IS MY END");
+                          return;
+                        }
 
-                      // let's delete  that booking
-                      const formData = new FormData();
-                      formData.append("booking_id", booking_id);
-                      DeleteBooking(formData)
-                        .then((data) => {
-                          console.log("Data ", data);
-                        })
-                        .catch((err) => {
-                          console.log("Error occured in deleting booking");
-                          Alert.alert(
-                            "Something went wrong",
-                            `${err.toString()}`,
-                            [
-                              {
-                                text: "Okay",
-                              },
-                            ]
-                          );
-                        });
-                    }}
-                  />
-                )}
+                        setShowTimeoutError((prevState) => prevState + 1);
+
+                        // let's delete  that booking
+                        const formData = new FormData();
+                        formData.append("booking_id", booking_id);
+                        console.log("IM TILL HERE");
+                        DeleteBooking(formData)
+                          .then((data) => {
+                            console.log("Data ", data);
+                          })
+                          .catch((err) => {
+                            console.log("Error occured in deleting booking");
+                            Alert.alert(
+                              "Something went wrong",
+                              `${err.toString()}`,
+                              [
+                                {
+                                  text: "Okay",
+                                },
+                              ]
+                            );
+                          });
+                      }}
+                    />
+                  )}
+                {!shouldRemoveFirstBlinkingView &&
+                  !needrefresh &&
+                  !showTimeoutError && (
+                    <BlinkingView
+                      metadata={metadata}
+                      needrefresh={needrefresh}
+                      timeIsUpHandler={() => {
+                        if (iNeedToPayNow) {
+                          console.log("WE DONT DELETE THE BOOKING");
+                          return;
+                        }
+
+                        setShowTimeoutError((prevState) => prevState + 1);
+
+                        // let's delete  that booking
+                        const formData = new FormData();
+                        formData.append("booking_id", booking_id);
+                        DeleteBooking(formData)
+                          .then((data) => {
+                            console.log("Data ", data);
+                          })
+                          .catch((err) => {
+                            console.log("Error occured in deleting booking");
+                            Alert.alert(
+                              "Something went wrong",
+                              `${err.toString()}`,
+                              [
+                                {
+                                  text: "Okay",
+                                },
+                              ]
+                            );
+                          });
+                      }}
+                    />
+                  )}
 
                 <View
                   style={{
@@ -801,7 +875,7 @@ function FillPassengerInfo({ route, navigation }) {
                     }}
                     onPress={paymentHandler}
                   >
-                    Pay now
+                    Continue
                   </RNPaper.Button>
                 </View>
               </View>
