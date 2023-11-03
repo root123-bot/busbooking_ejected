@@ -132,6 +132,28 @@ function FillPassengerInfo({ route, navigation }) {
 
   const { metadata, bookedSeats, booking_id, needrefresh } = route.params;
 
+  /*
+    the logic behind iNeedToPayNow, this initially at the first blinkingViews its "false"
+    when the user at the first blinkingView click to pay we make it "true", means it should
+    enforce the logic of isTimeoutReached to not being executed as it force the handler to 
+    return 'false', then we go to the next page payment page then we can need to back again 
+    on back again the another second 'blinkingView' is executed and as you know the app cache 
+    the previous changes made which display the filled information and also it has 'iNeedToPayNow' of 'true'
+    which this is dangerous as if it remains true then this next blinkingView timeout will not be
+    executed so what i did, is i force it to return to false through the 'useEffect' which use 
+    needrefresh as 'dependency' this will be executed only once as 'needrefresh' does not change 
+    so we force iNeedToPayNow to 'false' so as our timeEnd reached handler to be executed and to 
+    display the animation... But it we make it to 'false' remember the 'counter' still count even if
+    we move out or when we click 'Pay now' to go to the 'Payment' page by clicking go to  the 'Payment' we set
+    iNeedToPayNow to 'true' which is good to stop the timeoutReached when we navigate to the 'payment' page
+    so this is logic used here and its okay because the way we play with this 'iNeedToPayNow' is 
+    marvelous so even if we go next then comeback here then go next it will act accordingly.. But point of 
+    note here is that the 'iNeedToPayNow' logic for first 'render' or first BlinkingView is not useful
+    anymore since we have the 'shouldRemoveFirstBlinkingView' which we force to remove the first blinkingView and
+    its logic when we go to the 'Payment' for first time so it also remmove the onTimeReached handler 
+    which delete the booking that all, you did
+  */
+
   // console.log("Booked Seats ", bookedSeats);
   // console.log("METADATA ", metadata);
   console.log("Booking id ", booking_id);
