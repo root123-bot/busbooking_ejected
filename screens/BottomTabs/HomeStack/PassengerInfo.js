@@ -132,6 +132,13 @@ function FillPassengerInfo({ route, navigation }) {
 
   const { metadata, bookedSeats, booking_id, needrefresh } = route.params;
 
+  /* 
+    why i removed iNeedToPayNow state which its aim was to be set true before navigate to paynow
+    page, the reason behind is because now we have 'shouldRemoveFirstBlinkingView' which will remove
+    all the logics of first 'blinkingView' including the counter logic when user tries to payNow this will
+    avoid the logic of deleting the booking... 
+  */
+
   // console.log("Booked Seats ", bookedSeats);
   // console.log("METADATA ", metadata);
   console.log("Booking id ", booking_id);
@@ -150,7 +157,7 @@ function FillPassengerInfo({ route, navigation }) {
   const [formattedValue, setFormattedValue] = useState("+255");
   const [secondFormattedValue, setSecondFormattedValue] = useState("+255");
   const [showTimeoutError, setShowTimeoutError] = useState(0);
-  const [iNeedToPayNow, setINeedToPayNow] = useState(false);
+  // const [iNeedToPayNow, setINeedToPayNow] = useState(false);
   const [shouldRemoveFirstBlinkingView, setShouldRemoveFirstBlinkingView] =
     useState(false);
 
@@ -177,7 +184,7 @@ function FillPassengerInfo({ route, navigation }) {
     // the seat should be available, so we should first make the logic of counting timer not working again before
     // we submit data, remember we take our logic in "timeIsUpHandler"
     //
-    setINeedToPayNow(true);
+    // setINeedToPayNow(true);
     // i think we still need to set time count, and you know what if the request to pay for
     // ticket fail which is unlikely we need to set need to paynow false... but i think this
     // counter if user click payNow should disappear since its easy task of taking the user to next page
@@ -191,10 +198,7 @@ function FillPassengerInfo({ route, navigation }) {
     });
   };
 
-  useEffect(() => {
-    console.log("THIS IS VALUE OF TIMEOUT ERROR ", showTimeoutError);
-  }, [showTimeoutError]);
-
+  // console.log("THIS IS iNeedToPayNow", iNeedToPayNow);
   return (
     <>
       <StatusBar style="light" />
@@ -753,11 +757,15 @@ function FillPassengerInfo({ route, navigation }) {
                       metadata={metadata}
                       needrefresh={needrefresh}
                       timeIsUpHandler={() => {
-                        if (!needrefresh && iNeedToPayNow) {
-                          console.log("THIS IS MY END");
-                          return;
-                        }
-
+                        // this point ni muhimu ku-avoid
+                        // if (iNeedToPayNow) {
+                        //   console.log("THIS IS MY END");
+                        //   // its okay  this will make the function return nothing but before it return nothing lets make
+                        //   // the iNeedToPayNow to its default value..
+                        //   setINeedToPayNow(false);
+                        //   return;
+                        // }
+                        console.log("PLEASE REACH THIS POINT..");
                         setShowTimeoutError((prevState) => prevState + 1);
 
                         // let's delete  that booking
@@ -790,13 +798,17 @@ function FillPassengerInfo({ route, navigation }) {
                       metadata={metadata}
                       needrefresh={needrefresh}
                       timeIsUpHandler={() => {
-                        if (iNeedToPayNow) {
-                          console.log("WE DONT DELETE THE BOOKING");
-                          return;
-                        }
+                        // if (iNeedToPayNow) {
+                        //   console.log("WE DONT DELETE THE BOOKING");
+                        //   setINeedToPayNow(false);
+
+                        //   return;
+                        // }
 
                         setShowTimeoutError((prevState) => prevState + 1);
-
+                        console.log(
+                          "IM GOIN TO DELETE BOOKING IM THE FIRST BLINKING VIEW"
+                        );
                         // let's delete  that booking
                         const formData = new FormData();
                         formData.append("booking_id", booking_id);
