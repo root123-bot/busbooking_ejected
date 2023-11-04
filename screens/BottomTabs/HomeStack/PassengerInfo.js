@@ -210,6 +210,9 @@ function FillPassengerInfo({ route, navigation }) {
       metadata,
       bookedSeats,
       booking_id,
+      name,
+      firstFormattedPhoneNumber: formattedValue,
+      secondFormattedPhoneNumber: secondFormattedValue,
     });
   };
 
