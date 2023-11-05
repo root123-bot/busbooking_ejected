@@ -92,8 +92,7 @@ function TransparentBackgroundButton({ title, subtitle, icon, color }) {
       >
         <TouchableOpacity
           onPress={() => {
-            // AppCtx.manipulateTargettedChangePassword("customer");
-            // navigation.navigate("ChangePassword");
+            navigation.navigate("MyTickets");
           }}
         >
           <View style={styles.itemContainer}>

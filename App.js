@@ -41,6 +41,7 @@ import SetPinScreen from "./screens/BottomTabs/ProfileStack/Auth/SetPinScreen";
 import ForgotPassword from "./screens/BottomTabs/ProfileStack/Auth/ForgotPassword";
 import PickAvatarScreen from "./screens/BottomTabs/ProfileStack/PickAvatar";
 import Payment from "./screens/BottomTabs/HomeStack/Payment";
+import MyTickets from "./screens/BottomTabs/ProfileStack/MyTickets";
 
 const Stack = createNativeStackNavigator();
 const Stack1 = createStackNavigator();
@@ -143,6 +144,7 @@ function ProfileStack() {
     >
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="PickAvatarScreen" component={PickAvatarScreen} />
+      <Stack.Screen name="MyTickets" component={MyTickets} />
       {!AppCtx.isAunthenticated && (
         <>
           <Stack.Screen name="Register" component={RegisterScreen} />

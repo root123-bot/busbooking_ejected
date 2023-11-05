@@ -27,7 +27,7 @@ import { TransparentPopUpIconMessage } from "../../../components/Messages";
 
 const { height } = Dimensions.get("window");
 
-function RouterCard() {
+export function StyledRoutCard() {
   return (
     <View
       style={{
