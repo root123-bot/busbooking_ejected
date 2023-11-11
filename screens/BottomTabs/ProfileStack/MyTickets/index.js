@@ -15,6 +15,7 @@ import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import RouteCard from "../../../../components/RouteCard";
 import { StyledRoutCard } from "../../HomeStack/HomeScreen";
+import TicketOverview from "./TicketOverview";
 
 function MyTickets() {
   const navigation = useNavigation();
@@ -23,6 +24,7 @@ function MyTickets() {
       style={{
         position: "relative",
         flex: 1,
+        backgroundColor: COLORS.background,
       }}
     >
       <View style={[styles.container]}>
@@ -103,7 +105,7 @@ function MyTickets() {
               padding: 15,
             }}
           >
-            <StyledRoutCard />
+            <TicketOverview />
           </ScrollView>
         </View>
       </View>
