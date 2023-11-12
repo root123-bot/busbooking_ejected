@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import { View, Text, Platform } from "react-native";
+import { View, Text, Platform, Image } from "react-native";
 import * as RNPaper from "react-native-paper";
 import { COLORS } from "../../../../constants/colors";
 
@@ -13,7 +13,7 @@ function TicketOverview() {
       <View
         style={{
           width: "100%",
-          height: 200,
+          height: 160,
           backgroundColor: COLORS.light,
           borderRadius: 10,
 
@@ -89,7 +89,7 @@ function TicketOverview() {
             <Text
               style={{
                 // fontFamily: "overpass-reg",
-                color: "#00B4D8",
+                color: COLORS.primary,
                 fontSize: 12,
                 fontWeight: "600",
               }}
@@ -97,8 +97,218 @@ function TicketOverview() {
               2 MORE DAYS
             </Text>
           </View>
-          <View>
-            <RNPaper.Text>#HIACE28</RNPaper.Text>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Image
+              source={require("../../../../assets/images/tour-bus.png")}
+              style={{
+                width: 20,
+                height: 20,
+              }}
+            />
+            <RNPaper.Text
+              style={{
+                fontWeight: Platform.OS === "ios" ? "500" : "600",
+                color: "grey",
+                fontSize: 13,
+                marginLeft: 5,
+              }}
+            >
+              Hiace28
+            </RNPaper.Text>
+          </View>
+        </View>
+        {/* this is second square down below remember we have the full component of 160, the above component use almost 60 width, so we remained with 100px width 
+        so we covered all available space we dont have another space left */}
+        <View
+          style={{
+            position: "absolute",
+            top: 60,
+            left: 0,
+            width: "100%",
+            height: 100,
+            padding: 10,
+            paddingHorizontal: 15,
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <View
+            style={{
+              width: "33%",
+            }}
+          >
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                justifyContent: "center",
+              }}
+            >
+              <RNPaper.Text
+                numberOfLines={1}
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                20:20 PM
+              </RNPaper.Text>
+              <RNPaper.Text
+                numberOfLines={1}
+                style={{
+                  color: "grey",
+                  fontSize: 11,
+                }}
+              >
+                12 Dec 2022
+              </RNPaper.Text>
+              <RNPaper.Text
+                numberOfLines={2}
+                style={{
+                  marginTop: 3,
+                  fontSize: 16,
+                  color: "grey",
+                  textAlign: "left",
+                }}
+              >
+                Ubungo Bus Terminal
+              </RNPaper.Text>
+            </View>
+          </View>
+          <View
+            style={{
+              width: "30%",
+            }}
+          >
+            <View
+              style={{
+                width: "100%",
+                position: "relative",
+              }}
+            >
+              {/* the first dot */}
+              <View
+                style={{
+                  position: "absolute",
+                  top: -1,
+                  left: 0,
+                  width: 4,
+                  height: 4,
+                  borderRadius: 2,
+                  backgroundColor: "grey",
+                }}
+              ></View>
+              {/* the line */}
+              <View
+                style={{
+                  borderBottomWidth: 2,
+                  borderBottomColor: "grey",
+                  width: "100%",
+                }}
+              ></View>
+              {/* the right dot */}
+              <View
+                style={{
+                  position: "absolute",
+                  top: -1,
+                  right: 0,
+                  width: 4,
+                  height: 4,
+                  borderRadius: 2,
+                  backgroundColor: "grey",
+                }}
+              ></View>
+              {/* top text */}
+              <View
+                style={{
+                  width: "100%",
+                  position: "absolute",
+                  top: Platform.OS === "ios" ? -18 : -20,
+                  left: 0,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "grey",
+                    fontFamily: "overpass-reg",
+                    textAlign: "center",
+                    fontSize: 13,
+                  }}
+                >
+                  2h 5m
+                </Text>
+              </View>
+              <View
+                style={{
+                  width: "100%",
+                  position: "absolute",
+                  top: Platform.OS === "ios" ? 2 : 1,
+                  left: 0,
+                }}
+              >
+                <Text
+                  style={{
+                    color: "grey",
+                    fontFamily: "overpass-reg",
+                    textAlign: "center",
+                    fontSize: 13,
+                  }}
+                >
+                  Direct
+                </Text>
+              </View>
+            </View>
+          </View>
+          <View
+            style={{
+              width: "33%",
+            }}
+          >
+            <View
+              style={{
+                width: "100%",
+                height: "100%",
+                justifyContent: "center",
+                alignItems: "flex-end",
+              }}
+            >
+              <RNPaper.Text
+                numberOfLines={1}
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 16,
+                }}
+              >
+                06:20 PM
+              </RNPaper.Text>
+              <RNPaper.Text
+                numberOfLines={1}
+                style={{
+                  color: "grey",
+                  fontSize: 11,
+                }}
+              >
+                14 Dec 2022
+              </RNPaper.Text>
+              <RNPaper.Text
+                numberOfLines={2}
+                style={{
+                  marginTop: 3,
+                  fontSize: 16,
+                  color: "grey",
+                  textAlign: "right",
+                }}
+              >
+                Magufuli Bus Terminal
+              </RNPaper.Text>
+            </View>
           </View>
         </View>
       </View>
