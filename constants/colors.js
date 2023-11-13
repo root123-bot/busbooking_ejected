@@ -7,4 +7,5 @@ export const COLORS = {
   lightGrey: "#495057",
   warning: "#ffb700",
   danger: "#D64933",
+  darkGray: "#6C757D",
 };
