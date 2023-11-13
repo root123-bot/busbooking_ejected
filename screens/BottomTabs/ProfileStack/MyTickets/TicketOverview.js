@@ -8,6 +8,7 @@ function TicketOverview() {
     <View
       style={{
         width: "100%",
+        marginBottom: 15,
       }}
     >
       <View

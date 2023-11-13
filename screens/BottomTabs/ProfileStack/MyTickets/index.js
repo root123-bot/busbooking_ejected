@@ -28,7 +28,7 @@ function MyTickets() {
       }}
     >
       <View style={[styles.container]}>
-        <View style={styles.container}>
+        <View style={[styles.container]}>
           <View
             style={{
               width: "100%",
@@ -105,7 +105,20 @@ function MyTickets() {
               padding: 15,
             }}
           >
-            <TicketOverview />
+            <View
+              style={{
+                marginBottom: 20,
+              }}
+            >
+              <TicketOverview />
+              <TicketOverview />
+              <TicketOverview />
+              <TicketOverview />
+              <TicketOverview />
+              <TicketOverview />
+              <TicketOverview />
+              <TicketOverview />
+            </View>
           </ScrollView>
         </View>
       </View>
