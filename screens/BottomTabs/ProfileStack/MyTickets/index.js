@@ -28,7 +28,7 @@ function MyTickets() {
       }}
     >
       <View style={[styles.container]}>
-        <View style={[styles.container]}>
+        <View style={styles.container}>
           <View
             style={{
               width: "100%",
@@ -110,6 +110,9 @@ function MyTickets() {
                 marginBottom: 20,
               }}
             >
+              <TicketOverview />
+              <TicketOverview />
+              <TicketOverview />
               <TicketOverview />
               <TicketOverview />
               <TicketOverview />

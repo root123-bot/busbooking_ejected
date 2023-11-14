@@ -17,6 +17,7 @@ function TicketOverview() {
           height: 160,
           backgroundColor: COLORS.light,
           borderRadius: 10,
+
           shadowOffset: {
             width: 0,
             height: 2,
@@ -29,12 +30,12 @@ function TicketOverview() {
       >
         <ImageBackground
           source={require("../../../../assets/images/background/ticket-bg/back3.jpeg")}
-          imageStyle={{
-            opacity: 0.6,
-          }}
           style={{
             width: "100%",
             height: "100%",
+          }}
+          imageStyle={{
+            opacity: 0.6,
           }}
         >
           {/* circle shapes */}
