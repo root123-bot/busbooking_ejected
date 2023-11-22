@@ -103,7 +103,6 @@ function Details() {
             paddingHorizontal: 15,
           }}
         >
-          {/* <Text>Hello world</Text> */}
           <Text>
             <Barcode value="Hello World" format="CODE128" />;
           </Text>
