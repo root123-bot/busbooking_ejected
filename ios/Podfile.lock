@@ -3,7 +3,7 @@ PODS:
   - DoubleConversion (1.1.6)
   - EXApplication (5.1.1):
     - ExpoModulesCore
-  - EXBarCodeScanner (12.3.2):
+  - EXBarCodeScanner (12.5.3):
     - EXImageLoader
     - ExpoModulesCore
     - ZXingObjC/OneD
@@ -14,7 +14,7 @@ PODS:
     - ExpoModulesCore
   - EXFont (11.1.1):
     - ExpoModulesCore
-  - EXImageLoader (4.1.1):
+  - EXImageLoader (4.3.0):
     - ExpoModulesCore
     - React-Core
   - EXJSONUtils (0.5.1)
@@ -589,7 +589,7 @@ PODS:
   - RNScreens (3.25.0):
     - React-Core
     - React-RCTImage
-  - RNSVG (13.14.0):
+  - RNSVG (13.9.0):
     - React-Core
   - RNVectorIcons (9.2.0):
     - React-Core
@@ -848,11 +848,11 @@ SPEC CHECKSUMS:
   boost: 57d2868c099736d80fcd648bf211b4431e51a558
   DoubleConversion: 5189b271737e1565bdce30deb4a08d647e3f5f54
   EXApplication: d8f53a7eee90a870a75656280e8d4b85726ea903
-  EXBarCodeScanner: 8e23fae8d267dbef9f04817833a494200f1fce35
+  EXBarCodeScanner: 44783bf0be375ab18a838dcfef29dd648397000a
   EXConstants: ce5bbea779da8031ac818c36bea41b10e14d04e1
   EXFileSystem: 844e86ca9b5375486ecc4ef06d3838d5597d895d
   EXFont: 6ea3800df746be7233208d80fe379b8ed74f4272
-  EXImageLoader: fd053169a8ee932dd83bf1fe5487a50c26d27c2b
+  EXImageLoader: 34b214f9387e98f3c73989f15d8d5b399c9ab3f7
   EXJSONUtils: 48b1e764ac35160e6f54d21ab60d7d9501f3e473
   EXLocation: 74a0ba446f54fd585ea6cfcd19a25644bf22c30d
   EXManifests: 500666d48e8dd7ca5a482c9e729e4a7a6c34081b
@@ -926,11 +926,11 @@ SPEC CHECKSUMS:
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNReanimated: cc5e3aa479cb9170bcccf8204291a6950a3be128
   RNScreens: 85d3880b52d34db7b8eeebe2f1a0e807c05e69fa
-  RNSVG: d00c8f91c3cbf6d476451313a18f04d220d4f396
+  RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   Yoga: 135109c9b8c5d1a8af3a58d21cd4c7aa7f3bf555
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5
 
 PODFILE CHECKSUM: d63b3f0f39987dfd4f7890bb25f8b41d8d231c08
 
-COCOAPODS: 1.11.3
+COCOAPODS: 1.13.0

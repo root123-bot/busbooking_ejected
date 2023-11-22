@@ -42,6 +42,7 @@ import ForgotPassword from "./screens/BottomTabs/ProfileStack/Auth/ForgotPasswor
 import PickAvatarScreen from "./screens/BottomTabs/ProfileStack/PickAvatar";
 import Payment from "./screens/BottomTabs/HomeStack/Payment";
 import MyTickets from "./screens/BottomTabs/ProfileStack/MyTickets";
+import TicketDetails from "./screens/BottomTabs/ProfileStack/MyTickets/TicketDetails";
 
 const Stack = createNativeStackNavigator();
 const Stack1 = createStackNavigator();
@@ -145,6 +146,7 @@ function ProfileStack() {
       <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
       <Stack.Screen name="PickAvatarScreen" component={PickAvatarScreen} />
       <Stack.Screen name="MyTickets" component={MyTickets} />
+      <Stack.Screen name="TicketDetails" component={TicketDetails} />
       {!AppCtx.isAunthenticated && (
         <>
           <Stack.Screen name="Register" component={RegisterScreen} />
