@@ -1,7 +1,9 @@
 import React, { memo } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Dimensions } from "react-native";
 import * as RNPaper from "react-native-paper";
 import { COLORS } from "../../../../../constants/colors";
+
+const { height } = Dimensions.get("window");
 
 function CardMainContent({ top, isTicketDetails }) {
   return (
@@ -11,7 +13,7 @@ function CardMainContent({ top, isTicketDetails }) {
         top: top ? top : 60,
         left: 0,
         width: "100%",
-        height: 100,
+        height: isTicketDetails && height < 701 ? 80 : 100,
         padding: 10,
         paddingHorizontal: isTicketDetails ? 5 : 15,
         flexDirection: "row",

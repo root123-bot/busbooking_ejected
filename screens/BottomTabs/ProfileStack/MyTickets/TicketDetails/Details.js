@@ -17,6 +17,58 @@ const { height } = Dimensions.get("window");
 const ticketHeight = height * 0.62;
 const top = 5;
 
+function computeSpacing() {
+  if (height > 820) {
+    return {
+      marginTop: 20,
+      top: 110,
+    };
+  }
+  if (height < 820 && height > 800) {
+    return {
+      marginTop: 15,
+      top: 110,
+    };
+  }
+
+  if (height < 820 && height > 780) {
+    return {
+      marginTop: 5,
+      top: 105,
+    };
+  }
+
+  if (height < 780 && height > 750) {
+    return {
+      marginTop: 0,
+      top: 100,
+    };
+  }
+
+  if (height < 750 && height > 700) {
+    return {
+      marginTop: 0,
+      top: 90,
+    };
+  }
+
+  if (height < 700 && height > 680) {
+    return {
+      marginTop: 0,
+      top: 80,
+    };
+  }
+
+  // for the height < 680 i think we should top ticket header having ticketId, busname and underline
+  // i will then test this on small screen to see how it behave..
+  if (height < 681) {
+    return {
+      marginTop: 0,
+      top: 80,
+    };
+  }
+}
+
 function Details() {
   return (
     <View
@@ -98,66 +150,71 @@ function Details() {
               marginTop: 7,
             }}
           >
-            <View
-              style={{
-                alignItems: "center",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <View
-                style={{
-                  width: "100%",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                    color: "grey",
-                  }}
-                >
-                  #EID8329...
-                </Text>
+            {/* this view should go to hell if we have height < 680 */}
+            {height > 680 && (
+              <View>
                 <View
                   style={{
-                    flexDirection: "row",
-                    justifyContent: "center",
                     alignItems: "center",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
                   }}
                 >
-                  <Image
-                    source={require("../../../../../assets/images/tour-bus.png")}
+                  <View
                     style={{
-                      width: 20,
-                      height: 20,
-                    }}
-                  />
-                  <RNPaper.Text
-                    style={{
-                      fontWeight: Platform.OS === "ios" ? "500" : "600",
-                      color: "grey",
-                      fontSize: 13,
-                      marginLeft: 5,
+                      width: "100%",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
                     }}
                   >
-                    Hiace28
-                  </RNPaper.Text>
+                    <Text
+                      style={{
+                        fontWeight: "bold",
+                        color: "grey",
+                      }}
+                    >
+                      #EID8329...
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Image
+                        source={require("../../../../../assets/images/tour-bus.png")}
+                        style={{
+                          width: 20,
+                          height: 20,
+                        }}
+                      />
+                      <RNPaper.Text
+                        style={{
+                          fontWeight: Platform.OS === "ios" ? "500" : "600",
+                          color: "grey",
+                          fontSize: 13,
+                          marginLeft: 5,
+                        }}
+                      >
+                        Hiace28
+                      </RNPaper.Text>
+                    </View>
+                  </View>
                 </View>
+                {/* below line */}
+                <View
+                  style={{
+                    width: "100%",
+                    height: 1,
+                    borderWidth: 1,
+                    marginTop: 5,
+                    borderColor: COLORS.grayWhite,
+                  }}
+                ></View>
               </View>
-            </View>
-            {/* below line */}
-            <View
-              style={{
-                width: "100%",
-                height: 1,
-                borderWidth: 1,
-                marginTop: 5,
-                borderColor: COLORS.grayWhite,
-              }}
-            ></View>
+            )}
             <View>
               <CardMainContent top={top} isTicketDetails />
               {/* then we have above top=5 then the above card takes up to the 100 height
@@ -168,7 +225,7 @@ function Details() {
               <View
                 style={{
                   position: "absolute",
-                  top: 110,
+                  top: computeSpacing().top,
                   left: 0,
                   width: "100%",
                   paddingHorizontal: 5,
@@ -225,7 +282,7 @@ function Details() {
                 </View>
                 <View
                   style={{
-                    marginTop: 20,
+                    marginTop: computeSpacing().marginTop,
                     flexDirection: "row",
                     justifyContent: "space-between",
                     width: "100%",
@@ -310,7 +367,7 @@ function Details() {
                 </View>
                 <View
                   style={{
-                    marginTop: 20,
+                    marginTop: computeSpacing().marginTop,
                     flexDirection: "row",
                     justifyContent: "space-between",
                     width: "100%",
@@ -366,7 +423,7 @@ function Details() {
           }}
         >
           <Text>
-            <Barcode value="Hello World" format="CODE128" />;
+            <Barcode value="Hello World" format="CODE128" />
           </Text>
         </View>
       </View>
