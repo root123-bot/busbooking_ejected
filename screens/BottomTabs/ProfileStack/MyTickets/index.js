@@ -10,7 +10,7 @@ import {
 import { COLORS } from "../../../../constants/colors";
 import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-import TicketOverview from "./TicketOverview";
+import TicketOverview from "./TicketOverview/TicketOverview";
 import ScreenHeader from "./ScreenHeader";
 
 function MyTickets() {

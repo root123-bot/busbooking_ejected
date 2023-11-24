@@ -8,4 +8,6 @@ export const COLORS = {
   warning: "#ffb700",
   danger: "#D64933",
   darkGray: "#6C757D",
+  grayWhite: "#E9ECEF",
+  platinum: "#DEE2E6",
 };

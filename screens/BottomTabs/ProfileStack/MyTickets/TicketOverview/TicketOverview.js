@@ -8,8 +8,9 @@ import {
   Pressable,
 } from "react-native";
 import * as RNPaper from "react-native-paper";
-import { COLORS } from "../../../../constants/colors";
+import { COLORS } from "../../../../../constants/colors";
 import { useNavigation } from "@react-navigation/native";
+import CardMainContent from "./Content";
 
 function TicketOverview({ expired }) {
   const navigation = useNavigation();
@@ -39,7 +40,7 @@ function TicketOverview({ expired }) {
           }}
         >
           <ImageBackground
-            source={require("../../../../assets/images/background/ticket-bg/back3.jpeg")}
+            source={require("../../../../../assets/images/background/ticket-bg/back3.jpeg")}
             style={{
               width: "100%",
               height: "100%",
@@ -148,7 +149,7 @@ function TicketOverview({ expired }) {
                 }}
               >
                 <Image
-                  source={require("../../../../assets/images/tour-bus.png")}
+                  source={require("../../../../../assets/images/tour-bus.png")}
                   style={{
                     width: 20,
                     height: 20,
@@ -168,7 +169,7 @@ function TicketOverview({ expired }) {
             </View>
             {/* this is second square down below remember we have the full component of 160, the above component use almost 60 width, so we remained with 100px width 
         so we covered all available space we dont have another space left */}
-            <View
+            {/* <View
               style={{
                 position: "absolute",
                 top: 60,
@@ -236,7 +237,6 @@ function TicketOverview({ expired }) {
                     position: "relative",
                   }}
                 >
-                  {/* the first dot */}
                   <View
                     style={{
                       position: "absolute",
@@ -248,7 +248,6 @@ function TicketOverview({ expired }) {
                       backgroundColor: "grey",
                     }}
                   ></View>
-                  {/* the line */}
                   <View
                     style={{
                       borderBottomWidth: 2,
@@ -256,7 +255,6 @@ function TicketOverview({ expired }) {
                       width: "100%",
                     }}
                   ></View>
-                  {/* the right dot */}
                   <View
                     style={{
                       position: "absolute",
@@ -268,7 +266,6 @@ function TicketOverview({ expired }) {
                       backgroundColor: "grey",
                     }}
                   ></View>
-                  {/* top text */}
                   <View
                     style={{
                       width: "100%",
@@ -353,7 +350,9 @@ function TicketOverview({ expired }) {
                   </RNPaper.Text>
                 </View>
               </View>
-            </View>
+            </View> */}
+
+            <CardMainContent />
           </ImageBackground>
         </View>
       </View>
