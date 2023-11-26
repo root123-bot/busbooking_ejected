@@ -1,11 +1,23 @@
-import React, { memo } from "react";
+import React, { memo, useRef } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import ScreenHeader from "../ScreenHeader";
 import { COLORS } from "../../../../../constants/colors";
 import { Button } from "react-native-paper";
 import Details from "./Details";
+import ViewShot from "react-native-view-shot";
 
 function TicketDetails({ route }) {
+  const ref = useRef();
+
+  function handleDownload() {
+    console.log("hello world");
+    // we should check permission to save the image
+    ref.current.capture().then((uri) => {
+      console.log("THIS IS URL FOR YOU ", uri);
+      alert("Took screenshot");
+    });
+  }
+
   return (
     <View
       style={{
@@ -16,21 +28,33 @@ function TicketDetails({ route }) {
     >
       <View style={[styles.container]}>
         <ScreenHeader title={"Ticket Details"} />
-        <ScrollView
-          style={{
-            padding: 15,
-            paddingTop: 0,
-            flex: 1,
+        <ViewShot
+          ref={ref}
+          options={{
+            fileName: "ticket-123", // screenshot image name
+            format: "jpg", // image extention
+            quality: 0.9, // image quality
           }}
-          contentContainerStyle={{
-            justifyContent: "center",
-            alignItems: "center",
+          style={{
             flex: 1,
-            marginBottom: 50, // this is width of lower download button so we make sure our scrollview does not take any space of button it should remain in available space, also it automatically does not take the space of top header so its look fine
           }}
         >
-          <Details />
-        </ScrollView>
+          <ScrollView
+            style={{
+              padding: 15,
+              paddingTop: 0,
+              flex: 1,
+            }}
+            contentContainerStyle={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+              marginBottom: 50, // this is width of lower download button so we make sure our scrollview does not take any space of button it should remain in available space, also it automatically does not take the space of top header so its look fine
+            }}
+          >
+            <Details />
+          </ScrollView>
+        </ViewShot>
       </View>
       <View
         style={{
@@ -60,6 +84,7 @@ function TicketDetails({ route }) {
               backgroundColor: COLORS.darkprimary,
               borderRadius: 20,
             }}
+            onPress={handleDownload}
           >
             Download
           </Button>
