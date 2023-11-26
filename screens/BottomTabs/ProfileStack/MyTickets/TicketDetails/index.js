@@ -6,6 +6,7 @@ import {
   ScrollView,
   Linking,
   Alert,
+  Share,
 } from "react-native";
 import ScreenHeader from "../ScreenHeader";
 import { COLORS } from "../../../../../constants/colors";
@@ -62,8 +63,17 @@ function TicketDetails({ route }) {
           setMessage("Screenshot saved");
           setTimeout(() => {
             setShowAnimation(false);
-            setTimeout(() => {
+            setTimeout(async () => {
               setFormSubmitLoader(false);
+              // lets invoke sharing of the screenshot..
+              try {
+                await Share.share({
+                  message: "Ticket Screenshot!",
+                  url: uri,
+                });
+              } catch (error) {
+                console.error("Error sharing the screenshot: ", error);
+              }
             }, 1500);
           }, 1500);
         } else {
