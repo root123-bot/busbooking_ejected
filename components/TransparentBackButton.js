@@ -111,7 +111,11 @@ function TransparentBackgroundButton({ title, subtitle, icon, color }) {
         </TouchableOpacity>
         <CustomLine color={"grey"} style={styles.customLine} />
 
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("ValidateTicket");
+          }}
+        >
           <View style={styles.itemContainer}>
             <View style={styles.iconHolder}>
               <MaterialCommunityIcons
