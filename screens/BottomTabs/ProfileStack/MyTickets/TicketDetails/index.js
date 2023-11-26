@@ -1,20 +1,34 @@
 import React, { memo, useRef } from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Linking } from "react-native";
 import ScreenHeader from "../ScreenHeader";
 import { COLORS } from "../../../../../constants/colors";
 import { Button } from "react-native-paper";
 import Details from "./Details";
 import ViewShot from "react-native-view-shot";
+import * as MediaLibrary from "expo-media-library";
 
 function TicketDetails({ route }) {
+  const [status, requestPermission] = MediaLibrary.usePermissions();
+
   const ref = useRef();
 
   function handleDownload() {
-    console.log("hello world");
-    // we should check permission to save the image
-    ref.current.capture().then((uri) => {
+    console.log("hello world ", status);
+    if (status.status === "undetermined" && status.canAskAgain) {
+      return requestPermission();
+    }
+
+    if (status.status === "denied" && !status.canAskAgain) {
+      // we can't ask for user permission for this we should show the
+      // alert for the user to open settings and manually allow this..
+      return Linking.openURL("app-settings:");
+    }
+    ref.current.capture().then(async (uri) => {
       console.log("THIS IS URL FOR YOU ", uri);
-      alert("Took screenshot");
+      await MediaLibrary.saveToLibraryAsync(uri);
+      if (uri) {
+        alert("Screenshot saved");
+      }
     });
   }
 
@@ -45,6 +59,7 @@ function TicketDetails({ route }) {
               paddingTop: 0,
               flex: 1,
             }}
+            collapsable={false}
             contentContainerStyle={{
               justifyContent: "center",
               alignItems: "center",
