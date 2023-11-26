@@ -1,4 +1,4 @@
-import React, { memo, useRef } from "react";
+import React, { memo, useRef, useState } from "react";
 import { View, Text, StyleSheet, ScrollView, Linking } from "react-native";
 import ScreenHeader from "../ScreenHeader";
 import { COLORS } from "../../../../../constants/colors";
@@ -6,9 +6,15 @@ import { Button } from "react-native-paper";
 import Details from "./Details";
 import ViewShot from "react-native-view-shot";
 import * as MediaLibrary from "expo-media-library";
+import { TransparentPopUpIconMessage } from "../../../../../components/Messages";
 
 function TicketDetails({ route }) {
   const [status, requestPermission] = MediaLibrary.usePermissions();
+
+  const [showAnimation, setShowAnimation] = useState(false);
+  const [formSubmitLoader, setFormSubmitLoader] = useState(false);
+  const [message, setMessage] = useState("");
+  const [icon, setIcon] = useState("");
 
   const ref = useRef();
 
@@ -23,13 +29,43 @@ function TicketDetails({ route }) {
       // alert for the user to open settings and manually allow this..
       return Linking.openURL("app-settings:");
     }
-    ref.current.capture().then(async (uri) => {
-      console.log("THIS IS URL FOR YOU ", uri);
-      await MediaLibrary.saveToLibraryAsync(uri);
-      if (uri) {
-        alert("Screenshot saved");
-      }
-    });
+    setFormSubmitLoader(true);
+    setShowAnimation(true);
+    ref.current
+      .capture()
+      .then(async (uri) => {
+        await MediaLibrary.saveToLibraryAsync(uri);
+        if (uri) {
+          setIcon("check-circle-outline");
+          setMessage("Screenshot saved");
+          setTimeout(() => {
+            setShowAnimation(false);
+            setTimeout(() => {
+              setFormSubmitLoader(false);
+            }, 1500);
+          }, 1500);
+        } else {
+          setIcon("error-outline");
+          setMessage("Failed");
+          setTimeout(() => {
+            setShowAnimation(false);
+            setTimeout(() => {
+              setFormSubmitLoader(false);
+            }, 1500);
+          }, 1500);
+        }
+      })
+      .catch((err) => {
+        setIcon("error-outline");
+        setMessage("Failed");
+        setTimeout(() => {
+          setShowAnimation(false);
+          setTimeout(() => {
+            setFormSubmitLoader(false);
+          }, 1500);
+        }, 1500);
+        console.log("this is error for you ", err);
+      });
   }
 
   return (
@@ -40,7 +76,29 @@ function TicketDetails({ route }) {
         backgroundColor: COLORS.background,
       }}
     >
-      <View style={[styles.container]}>
+      <View
+        style={{
+          display: formSubmitLoader ? "flex" : "none",
+          position: "absolute",
+          top: "40%",
+          zIndex: 10000000000,
+          alignSelf: "center",
+          width: 150,
+          height: 150,
+          justifyContent: "center",
+        }}
+      >
+        <TransparentPopUpIconMessage
+          messageHeader={message}
+          icon={icon}
+          inProcess={showAnimation}
+        />
+      </View>
+
+      <View
+        style={[styles.container]}
+        pointerEvents={formSubmitLoader ? "none" : "auto"}
+      >
         <ScreenHeader title={"Ticket Details"} />
         <ViewShot
           ref={ref}
