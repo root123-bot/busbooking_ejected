@@ -1,5 +1,12 @@
 import React, { memo, useRef, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Linking } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Linking,
+  Alert,
+} from "react-native";
 import ScreenHeader from "../ScreenHeader";
 import { COLORS } from "../../../../../constants/colors";
 import { Button } from "react-native-paper";
@@ -27,7 +34,22 @@ function TicketDetails({ route }) {
     if (status.status === "denied" && !status.canAskAgain) {
       // we can't ask for user permission for this we should show the
       // alert for the user to open settings and manually allow this..
-      return Linking.openURL("app-settings:");
+      return Alert.alert(
+        "Allow permission",
+        "You should allow this app to save screenshot on photo library.",
+        [
+          {
+            text: "Cancel",
+          },
+          {
+            text: "Continue",
+            style: "destructive",
+            onPress: () => {
+              return Linking.openURL("app-settings:");
+            },
+          },
+        ]
+      );
     }
     setFormSubmitLoader(true);
     setShowAnimation(true);
@@ -130,6 +152,7 @@ function TicketDetails({ route }) {
         </ViewShot>
       </View>
       <View
+        pointerEvents={formSubmitLoader ? "none" : "auto"}
         style={{
           width: "100%",
           position: "absolute",
@@ -157,6 +180,7 @@ function TicketDetails({ route }) {
               backgroundColor: COLORS.darkprimary,
               borderRadius: 20,
             }}
+            loading={formSubmitLoader}
             onPress={handleDownload}
           >
             Download
