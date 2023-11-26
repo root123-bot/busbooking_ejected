@@ -26,8 +26,10 @@ function TicketDetails({ route }) {
 
   const ref = useRef();
 
-  function handleDownload() {
+  async function handleDownload() {
     console.log("hello world ", status);
+    const output = await MediaLibrary.getPermissionsAsync();
+    console.log("OUTPUT ", output);
     if (status.status === "undetermined" && status.canAskAgain) {
       return requestPermission();
     }
@@ -66,6 +68,15 @@ function TicketDetails({ route }) {
             setTimeout(async () => {
               setFormSubmitLoader(false);
               // lets invoke sharing of the screenshot..
+              // ON IOS WE CAN REMOVE THE LOGIC TO SAVE THE SCREENSHOT ON THE DEVICE ABOVE AND ONLY DEPEND ON THE
+              // THIS SHARE FUNCTIONALITY WHICH COME WITH ALL FEATURES LIKE SHARING ON APP AND SAVE TO PHOTOS AND SO
+              // ON I THINK THIS WILL BE GOOD AS IT WILL DOES NOT REQUIRE US TO ASK FOR THE USER TO ALLOW PERMISSION
+              // FOR OUR APP TO SAVE PHOTOS TO DEVICE STORAGE SINCE IF USER CLICK THE SAVE BUTTON ON SHARE IT MEANS
+              // SHE ALLOWED THE PERMISSION I THINK THIS IS OKAY AND MORE SECURE SINCE IN IOS WE HAVE THE PROBLEM OF THE
+              // 'ADD TO PHOTO LIBRARY' ONLY WHICH EVEN IF USER ALLOW THIS IT WILL STILL MAKE MEDIALIBRARY PERMISSION DENIED
+              // we can update this later i think for now lets leave it alone,, but this share functionality have many
+              // options like save to device, share to social media and so on which does not require us to check and ask for
+              // permission
               try {
                 await Share.share({
                   message: "Ticket Screenshot!",
