@@ -1,4 +1,9 @@
-import { FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import {
+  FontAwesome5,
+  Ionicons,
+  MaterialCommunityIcons,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import React, { memo, useContext, useState } from "react";
 import {
@@ -101,6 +106,22 @@ function TransparentBackgroundButton({ title, subtitle, icon, color }) {
             </View>
             <View>
               <Text style={styles.title}>My Tickets</Text>
+            </View>
+          </View>
+        </TouchableOpacity>
+        <CustomLine color={"grey"} style={styles.customLine} />
+
+        <TouchableOpacity onPress={() => {}}>
+          <View style={styles.itemContainer}>
+            <View style={styles.iconHolder}>
+              <MaterialCommunityIcons
+                name="barcode-scan"
+                size={30}
+                color="grey"
+              />
+            </View>
+            <View>
+              <Text style={styles.title}>Validate Ticket</Text>
             </View>
           </View>
         </TouchableOpacity>
