@@ -234,8 +234,14 @@ export default function App() {
     setConnectionType(state.type);
   };
 
-  // i think here is where we experience too much loading
-  if (!appIsReady || !fontsLoaded) {
+  // i think here is where we experience too much loading, if we use AppIsReady is make the application slow in some seconds as this process
+  // i measured it in my phone it take almost 3 to 5 seconds to be loaded which i think its bad use experience so initialy the conditon was
+  // if (!appIsReady || !fontsLoaded) so i think there is no way the user can be faster to take out the into screen as it need user to toggle on
+  // to proceed, our logic here of having the 'useEffect' to load these icons of Ionicons and MaterialCommunityIcons its okay but the logic of waiting
+  // for them to complete loading i think in my case its not fine since it causes almost to wait for 4 to 5 seconds and as i told you in most case it
+  // takes the user 3 to 5 seconds to move out of intro screen
+  if (!fontsLoaded) {
+    console.log("IM CACHING THE IMAGE");
     return <LoadingSpinner />;
   }
 
