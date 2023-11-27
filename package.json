@@ -62,6 +62,7 @@
     "react-native-countdown-timer-hooks": "^1.0.4",
     "react-native-elements": "^3.4.3",
     "react-native-expo-image-cache": "^4.1.0",
+    "react-native-fast-image": "^8.6.3",
     "react-native-gesture-handler": "~2.9.0",
     "react-native-modal": "^13.0.1",
     "react-native-pager-view": "6.1.2",

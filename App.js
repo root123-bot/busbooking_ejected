@@ -204,7 +204,7 @@ const NetworkCheck = ({ status, type }) => {
 export default function App() {
   const [fontsLoaded] = useFonts({
     "overpass-reg": require("./assets/fonts/personalyzer/Overpass-Regular.ttf"),
-    "montserrat-17": require("./assets/fonts/Montserrat/static/Montserrat-SemiBold.ttf"),
+    "montserrat-17": require("./assets/fonts/Montserrat/Montserrat-SemiBold.ttf"),
   });
 
   const [connectionStatus, setConnectionStatus] = useState(false);
@@ -236,7 +236,6 @@ export default function App() {
 
   // i think here is where we experience too much loading
   if (!appIsReady || !fontsLoaded) {
-    console.log("IM CACHING NORMAL IMAGES RESOURCES FOR YOU");
     return <LoadingSpinner />;
   }
 

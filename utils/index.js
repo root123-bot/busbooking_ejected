@@ -9,6 +9,9 @@ export const _cacheResourcesAsync = async () => {
   const images = [
     require("../assets/images/background/2.jpg"),
     require("../assets/images/background/4.jpg"),
+    require("../assets/images/background/ticket-bg/back3.jpeg"),
+    require("../assets/images/background/ticket-bg/back4.jpeg"),
+    require("../assets/images/approved.jpeg"),
   ];
 
   const cacheImages = images.map((image) => {
