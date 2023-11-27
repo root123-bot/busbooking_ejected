@@ -19,14 +19,14 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
-import { useFonts } from "expo-font";
+import * as Font from "expo-font";
 import { COLORS } from "./constants/colors";
 import NetInfo from "@react-native-community/netinfo";
 import { _cacheResourcesAsync } from "./utils";
 import { LoadingSpinner } from "./components/ui";
 import IntroScreen from "./screens/IntroScreen";
 import HomeScreen from "./screens/BottomTabs/HomeStack/HomeScreen";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import DetailsScreen from "./screens/BottomTabs/HomeStack/DetailsScreen";
 import BusDetailsScreen from "./screens/BottomTabs/HomeStack/BusDetailsScreen";
 import PickSeatsScreen from "./screens/BottomTabs/HomeStack/PickSeatsScreen";
@@ -202,7 +202,7 @@ const NetworkCheck = ({ status, type }) => {
 };
 
 export default function App() {
-  const [fontsLoaded] = useFonts({
+  const [fontsLoaded] = Font.useFonts({
     "overpass-reg": require("./assets/fonts/personalyzer/Overpass-Regular.ttf"),
     "montserrat-17": require("./assets/fonts/Montserrat/Montserrat-SemiBold.ttf"),
   });
@@ -216,6 +216,8 @@ export default function App() {
 
   useEffect(() => {
     const loadResources = async () => {
+      await Font.loadAsync(Ionicons.font); // loads the Ionicons font which we have been used its icons on Bottom Tabs
+      await Font.loadAsync(MaterialCommunityIcons.font); // this icons used by react native paper inputs
       await _cacheResourcesAsync();
       setAppIsReady(true);
     };
