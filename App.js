@@ -57,8 +57,10 @@ function TabIcon({ focused, color, size, name }) {
 function MyTabs() {
   return (
     <Tab.Navigator
+      initialRouteName="HomeStack"
       screenOptions={{
         headerShown: false,
+        lazy: true,
         tabBarActiveTintColor: COLORS.darkprimary,
         tabBarShowLabel: false,
       }}
@@ -202,28 +204,7 @@ const NetworkCheck = ({ status, type }) => {
 export default function App() {
   const [fontsLoaded] = useFonts({
     "overpass-reg": require("./assets/fonts/personalyzer/Overpass-Regular.ttf"),
-    "roboto-reg": require("./assets/fonts/personalyzer/Roboto-Regular.ttf"),
-    "roboto-med": require("./assets/fonts/personalyzer/Roboto-MediumItalic.ttf"),
-    "montserrat-1": require("./assets/fonts/Montserrat/Montserrat-Italic-VariableFont_wght.ttf"),
-    "montserrat-2": require("./assets/fonts/Montserrat/Montserrat-VariableFont_wght.ttf"),
-    "montserrat-3": require("./assets/fonts/Montserrat/static/Montserrat-Black.ttf"),
-    "montserrat-4": require("./assets/fonts/Montserrat/static/Montserrat-BlackItalic.ttf"),
-    "montserrat-5": require("./assets/fonts/Montserrat/static/Montserrat-Bold.ttf"),
-    "montserrat-6": require("./assets/fonts/Montserrat/static/Montserrat-BoldItalic.ttf"),
-    "montserrat-7": require("./assets/fonts/Montserrat/static/Montserrat-ExtraBold.ttf"),
-    "montserrat-8": require("./assets/fonts/Montserrat/static/Montserrat-ExtraBoldItalic.ttf"),
-    "montserrat-9": require("./assets/fonts/Montserrat/static/Montserrat-ExtraLight.ttf"),
-    "montserrat-10": require("./assets/fonts/Montserrat/static/Montserrat-ExtraLightItalic.ttf"),
-    "montserrat-11": require("./assets/fonts/Montserrat/static/Montserrat-Italic.ttf"),
-    "montserrat-12": require("./assets/fonts/Montserrat/static/Montserrat-Light.ttf"),
-    "montserrat-13": require("./assets/fonts/Montserrat/static/Montserrat-LightItalic.ttf"),
-    "montserrat-14": require("./assets/fonts/Montserrat/static/Montserrat-Medium.ttf"),
-    "montserrat-15": require("./assets/fonts/Montserrat/static/Montserrat-MediumItalic.ttf"),
-    "montserrat-16": require("./assets/fonts/Montserrat/static/Montserrat-Regular.ttf"),
     "montserrat-17": require("./assets/fonts/Montserrat/static/Montserrat-SemiBold.ttf"),
-    "montserrat-18": require("./assets/fonts/Montserrat/static/Montserrat-SemiBoldItalic.ttf"),
-    "montserrat-19": require("./assets/fonts/Montserrat/static/Montserrat-Thin.ttf"),
-    "montserrat-20": require("./assets/fonts/Montserrat/static/Montserrat-ThinItalic.ttf"),
   });
 
   const [connectionStatus, setConnectionStatus] = useState(false);
@@ -253,7 +234,9 @@ export default function App() {
     setConnectionType(state.type);
   };
 
+  // i think here is where we experience too much loading
   if (!appIsReady || !fontsLoaded) {
+    console.log("IM CACHING NORMAL IMAGES RESOURCES FOR YOU");
     return <LoadingSpinner />;
   }
 

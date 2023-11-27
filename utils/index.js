@@ -7,9 +7,7 @@ import moment from "moment";
 
 export const _cacheResourcesAsync = async () => {
   const images = [
-    require("../assets/images/background/1.jpg"),
     require("../assets/images/background/2.jpg"),
-    require("../assets/images/background/3.jpg"),
     require("../assets/images/background/4.jpg"),
   ];
 
