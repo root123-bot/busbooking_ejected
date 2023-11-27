@@ -22,7 +22,6 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import * as Font from "expo-font";
 import { COLORS } from "./constants/colors";
 import NetInfo from "@react-native-community/netinfo";
-import { _cacheResourcesAsync } from "./utils";
 import { LoadingSpinner } from "./components/ui";
 import IntroScreen from "./screens/IntroScreen";
 import HomeScreen from "./screens/BottomTabs/HomeStack/HomeScreen";
@@ -218,7 +217,6 @@ export default function App() {
     const loadResources = async () => {
       await Font.loadAsync(Ionicons.font); // loads the Ionicons font which we have been used its icons on Bottom Tabs
       await Font.loadAsync(MaterialCommunityIcons.font); // this icons used by react native paper inputs
-      await _cacheResourcesAsync();
       setAppIsReady(true);
     };
     loadResources();

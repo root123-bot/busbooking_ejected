@@ -21,13 +21,22 @@ import { BASE_URL } from "../../../constants/domain";
 import { TransparentPopUpIconMessage } from "../../../components/Messages";
 import * as ImageCache from "react-native-expo-image-cache";
 import TransparentBackButton from "../../../components/TransparentBackButton";
+import { _cacheResourcesAsync } from "../../../utils";
 
 function ProfileScreen({ navigation, route }) {
   const AppCtx = useContext(AppContext);
+  const [profileIsReady, setProfileIsReady] = useState(false);
 
-  const [displayDialogue, setDisplayDialogue] = useState(false);
+  useEffect(() => {
+    const loadResources = async () => {
+      await _cacheResourcesAsync();
+      setProfileIsReady(true);
+    };
+    loadResources();
+  }, []);
 
-  if (AppCtx.stillExecutingUserMetadata) {
+  if (!profileIsReady || AppCtx.stillExecutingUserMetadata) {
+    // i think here we should show skeleton
     return <LoadingSpinner />;
   }
 
@@ -39,13 +48,7 @@ function ProfileScreen({ navigation, route }) {
           position: "relative",
         }}
       >
-        <View
-          style={[
-            { flex: 1 },
-            displayDialogue ? { opacity: 0.05 } : { opacity: 1 },
-          ]}
-          pointerEvents={displayDialogue ? "none" : "auto"}
-        >
+        <View style={[{ flex: 1 }]}>
           <ImageBackground
             style={styles.imgBack}
             source={require("../../../assets/images/background/2.jpg")}
