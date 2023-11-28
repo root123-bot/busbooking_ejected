@@ -43,6 +43,7 @@ import Payment from "./screens/BottomTabs/HomeStack/Payment";
 import MyTickets from "./screens/BottomTabs/ProfileStack/MyTickets";
 import TicketDetails from "./screens/BottomTabs/ProfileStack/MyTickets/TicketDetails";
 import ValidateTicket from "./screens/BottomTabs/ProfileStack/ValidateTicket";
+import { _cacheResourcesAsync } from "./utils";
 
 const Stack = createNativeStackNavigator();
 const Stack1 = createStackNavigator();
@@ -212,6 +213,18 @@ export default function App() {
   const [stillCheckingVersion, setStillCheckingVersion] = useState(true);
   const [updateMetadata, setUpdateMetadata] = useState();
   const [appIsReady, setAppIsReady] = useState(false);
+
+  // lets load resources without waiting
+  // it takes about 6seconds which is bad user experience, so what i did is i load these resources on App.js without waiting so if it will be
+  // loaded before going to profile screen then its lucky to user, otherwise its will be ugly which i think this is best approach since its
+  // 50% to 50%
+  // most these resources are only used when user go to Profile stack so lets load them but we should not wait for them to load to show ui
+  useEffect(() => {
+    const loadResources = async () => {
+      await _cacheResourcesAsync();
+    };
+    loadResources();
+  }, []);
 
   useEffect(() => {
     const loadResources = async () => {
