@@ -24,6 +24,7 @@ import * as RNPaper from "react-native-paper";
 import { AppContext } from "../../../store/context";
 import { LoadingSpinner } from "../../../components/ui";
 import { TransparentPopUpIconMessage } from "../../../components/Messages";
+import { Skeleton, Box, VStack, HStack } from "native-base";
 
 const { height } = Dimensions.get("window");
 
@@ -371,7 +372,34 @@ function HomeScreen({ navigation }) {
   }, []);
 
   if (AppCtx.stillFetchingTrips || AppCtx.stillFetchingAvatars) {
-    return <LoadingSpinner />;
+    return (
+      <Box flex={1} bg={"white"} safeArea>
+        <Box mx={5} h={"100%"} justifyContent="center">
+          <Box>
+            <Box mt={3}>
+              <Skeleton h="50px" borderRadius={5} />
+            </Box>
+            <Box mt={2}>
+              <Skeleton h="50px" borderRadius={5} />
+            </Box>
+            <Box mt={2}>
+              <Skeleton h="50px" borderRadius={5} />
+            </Box>
+            <Box mt={5}>
+              <Skeleton size={"50px"} w={"100%"} rounded={"full"} />
+            </Box>
+          </Box>
+          <Box mt={"80px"}>
+            <Box>
+              <Skeleton h="120px" borderRadius={5} />
+            </Box>
+            <Box mt={2}>
+              <Skeleton h="120px" borderRadius={5} />
+            </Box>
+          </Box>
+        </Box>
+      </Box>
+    );
   }
 
   return (

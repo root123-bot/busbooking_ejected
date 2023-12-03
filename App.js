@@ -44,6 +44,7 @@ import MyTickets from "./screens/BottomTabs/ProfileStack/MyTickets";
 import TicketDetails from "./screens/BottomTabs/ProfileStack/MyTickets/TicketDetails";
 import ValidateTicket from "./screens/BottomTabs/ProfileStack/ValidateTicket";
 import { _cacheResourcesAsync } from "./utils";
+import { NativeBaseProvider } from "native-base";
 
 const Stack = createNativeStackNavigator();
 const Stack1 = createStackNavigator();
@@ -259,20 +260,22 @@ export default function App() {
   }
 
   return (
-    <GestureHandlerRootView
-      style={{
-        flex: 1,
-      }}
-    >
-      <StatusBar style="light" />
-      {connectionStatus ? (
-        <AppContextProvider>
-          <Navigation />
-        </AppContextProvider>
-      ) : (
-        <NetworkCheck status={connectionStatus} type={connectionType} />
-      )}
-    </GestureHandlerRootView>
+    <NativeBaseProvider>
+      <GestureHandlerRootView
+        style={{
+          flex: 1,
+        }}
+      >
+        <StatusBar style="light" />
+        {connectionStatus ? (
+          <AppContextProvider>
+            <Navigation />
+          </AppContextProvider>
+        ) : (
+          <NetworkCheck status={connectionStatus} type={connectionType} />
+        )}
+      </GestureHandlerRootView>
+    </NativeBaseProvider>
   );
 }
 
