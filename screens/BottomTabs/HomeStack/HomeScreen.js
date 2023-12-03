@@ -371,7 +371,7 @@ function HomeScreen({ navigation }) {
     executeCoreLogics();
   }, []);
 
-  if (!AppCtx.stillFetchingTrips || AppCtx.stillFetchingAvatars) {
+  if (AppCtx.stillFetchingTrips || AppCtx.stillFetchingAvatars) {
     return (
       <Box flex={1} bg={"white"} safeArea>
         <Box mx={5} h={"100%"} justifyContent="center">
