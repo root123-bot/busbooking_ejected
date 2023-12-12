@@ -41,7 +41,7 @@ function ProfileScreen({ navigation, route }) {
   // it takes about 6seconds which is bad user experience, so what i did is i load these resources on App.js without waiting so if it will be
   // loaded before going to profile screen then its lucky to user, otherwise its will be ugly which i think this is best approach since its
   // 50% to 50%
-  if (!AppCtx.stillExecutingUserMetadata) {
+  if (AppCtx.stillExecutingUserMetadata) {
     // i think here we should show skeleton
     // return <LoadingSpinner />;
     return (
