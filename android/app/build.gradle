@@ -113,7 +113,7 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.busbooking"
+    namespace "com.mweuc654.busbooking"
     defaultConfig {
         applicationId 'com.mweuc654.busbooking'
         minSdkVersion rootProject.ext.minSdkVersion
