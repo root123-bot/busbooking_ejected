@@ -16,7 +16,6 @@ import { COLORS } from "../../../constants/colors";
 import SearchBar from "../../../components/SearchBar";
 import { Button, TextInput } from "react-native-paper";
 import { Picker } from "@react-native-picker/picker";
-// import DatePicker from "react-native-date-picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Ionicons } from "@expo/vector-icons";
 import { CustomLine } from "../../../components/ui";
@@ -706,6 +705,7 @@ function HomeScreen({ navigation }) {
                         display={Platform.OS === "ios" ? "spinner" : "default"}
                         value={date}
                         onChange={onChange}
+
                       />
                       {Platform.OS === "ios" && (
                         <Button

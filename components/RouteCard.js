@@ -144,9 +144,9 @@ function RouteCard({ metadata }) {
         >
           <TextInput
             mode="outlined"
-            // disabled={true}
             editable={false}
-            left={<TextInput.Icon icon="clock-fast" />}
+            pointerEvents="none"
+            left={<TextInput.Icon pointerEvents="none" icon="clock-fast" />}
             value={computeTimeTo12Format(metadata.source_arrival_time)}
             style={{
               width: "48%",
@@ -156,7 +156,8 @@ function RouteCard({ metadata }) {
           <TextInput
             mode="outlined"
             editable={false}
-            left={<TextInput.Icon icon="clock-fast" />}
+            pointerEvents="none"
+            left={<TextInput.Icon pointerEvents="none" icon="clock-fast" />}
             onChangeText={(text) => setPassengers(text)}
             value={computeTimeTo12Format(metadata.bus_departure_time)}
             label={"Departure Time"}
