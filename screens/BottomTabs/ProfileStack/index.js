@@ -8,6 +8,7 @@ import {
   ImageBackground,
   SafeAreaView,
   ScrollView,
+  Platform,
 } from "react-native";
 import { AppContext } from "../../../store/context";
 import {
@@ -22,6 +23,7 @@ import { TransparentPopUpIconMessage } from "../../../components/Messages";
 import * as ImageCache from "react-native-expo-image-cache";
 import TransparentBackButton from "../../../components/TransparentBackButton";
 import { _cacheResourcesAsync } from "../../../utils";
+import { Box, Skeleton, VStack } from "native-base";
 
 function ProfileScreen({ navigation, route }) {
   const AppCtx = useContext(AppContext);
@@ -39,9 +41,34 @@ function ProfileScreen({ navigation, route }) {
   // it takes about 6seconds which is bad user experience, so what i did is i load these resources on App.js without waiting so if it will be
   // loaded before going to profile screen then its lucky to user, otherwise its will be ugly which i think this is best approach since its
   // 50% to 50%
-  if (AppCtx.stillExecutingUserMetadata) {
+  if (!AppCtx.stillExecutingUserMetadata) {
     // i think here we should show skeleton
-    return <LoadingSpinner />;
+    // return <LoadingSpinner />;
+    return (
+      <Box flex={1} justifyContent={'center'}>
+        <Box mx={4}>
+          <Box alignItems={'center'} mb={5}>
+          <Skeleton size={200} rounded={'full'} />
+          </Box>
+          <Box mb={3}>
+            <Skeleton borderRadius={5} h={'48px'} w={'100%'} />
+          </Box>
+          <VStack space={1} mt={2}>
+            <Skeleton borderRadius={5} h={'48px'} w={'100%'} />
+            <Skeleton borderRadius={5} h={'48px'} w={'100%'} />
+            <Skeleton borderRadius={5} h={'48px'} w={'100%'} />
+            <Skeleton borderRadius={5} h={'48px'} w={'100%'} />
+            {
+              Platform.OS === 'ios' && (
+                <Skeleton borderRadius={5} h={'48px'} w={'100%'} bg={'red.100'} />
+              )
+            }
+
+          </VStack>
+ 
+        </Box>
+      </Box>
+    ) 
   }
 
   if (AppCtx.isAunthenticated) {
