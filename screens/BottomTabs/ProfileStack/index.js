@@ -47,7 +47,7 @@ function ProfileScreen({ navigation, route }) {
     return (
       <Box flex={1} justifyContent={'center'}>
         <Box mx={4}>
-          <Box alignItems={'center'} mb={5}>
+          <Box alignItems={'center'} mb={2}>
           <Skeleton size={200} rounded={'full'} />
           </Box>
           <Box mb={3}>
