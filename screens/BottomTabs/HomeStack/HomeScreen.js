@@ -199,6 +199,7 @@ function HomeScreen({ navigation }) {
   const [icon, setIcon] = useState("");
 
   const toggleDatePicker = () => {
+    console.log('im get called by you ')
     setShowPicker(!showPicker);
   };
 
@@ -247,6 +248,8 @@ function HomeScreen({ navigation }) {
   };
 
   const onChange = ({ type }, selectedDate) => {
+    // lets log type for you
+    console.log('THIS IS TYPE FOR YOU ', type)
     if (type === "set") {
       const currentDate = selectedDate;
 
@@ -258,6 +261,11 @@ function HomeScreen({ navigation }) {
       }
       // this should be set here down below
       setDate(currentDate);
+    }
+    if (type === 'dismissed') {
+       if (Platform.OS === 'android') {
+        toggleDatePicker()
+      }
     }
   };
 
@@ -705,7 +713,6 @@ function HomeScreen({ navigation }) {
                         display={Platform.OS === "ios" ? "spinner" : "default"}
                         value={date}
                         onChange={onChange}
-
                       />
                       {Platform.OS === "ios" && (
                         <Button
