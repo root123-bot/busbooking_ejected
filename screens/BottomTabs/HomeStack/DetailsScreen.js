@@ -1,13 +1,14 @@
-import React, { memo, useContext } from "react";
+import React, { memo, useContext, useState } from "react";
 import { View, StyleSheet, Text, Image, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { COLORS } from "../../../constants/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { AntDesign, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { TextInput } from "react-native-paper";
 import RouteCard from "../../../components/RouteCard";
 import { AppContext } from "../../../store/context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 /*
   POINT OF NOTE: there is no way tukawa na duplicates in our trips coz each trip is unique and it can contains 
@@ -17,6 +18,38 @@ import { AppContext } from "../../../store/context";
 
 function DetailsScreen({ navigation }) {
   const AppCtx = useContext(AppContext);
+
+  const [favIcon, setFavIcon] = useState('hearto')
+
+  const handleFavorite = async (tripid) => {
+    if (favIcon === 'hearto') {
+      setFavIcon('heart')
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+      if (favtrips) {
+        favtrips = JSON.parse(favtrips)
+        const existingtrip = favtrips.find(val => +val === +tripid)
+
+        if (!existingtrip) {
+          favtrips = [...favtrips, tripid]
+          await AsyncStorage.setItem('favorite-trips', favtrips)
+        }
+      }
+    }
+    else {
+      setFavIcon('hearto')
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+
+      if (favtrips) {
+        favtrips = JSON.parse(favtrips)
+        const existingtrip = favtrips.find(val => +val === +tripid)
+
+        if (existingtrip) {
+          favtrips.slice(favtrips.findIndex(val => +val === +tripid) , 1)
+          await AsyncStorage.setItem('favorite-trips', favtrips)
+        }
+      }
+    }
+  }
 
   return (
     <>
@@ -149,9 +182,10 @@ function DetailsScreen({ navigation }) {
                     alignItems: "flex-end",
                   }}
                 >
-                  <TouchableOpacity>
-                    <FontAwesome5 name="ellipsis-h" size={24} color="white" />
+                  <TouchableOpacity onPress={handleFavorite}>
+                  <AntDesign name={favIcon} size={25} color={'white'} />
                   </TouchableOpacity>
+                  
                 </View>
               </View>
             </View>

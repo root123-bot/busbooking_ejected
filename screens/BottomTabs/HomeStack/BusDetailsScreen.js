@@ -20,6 +20,7 @@ import {
   computeDifferenceBetweenTimes,
   computeTimeTo12Format,
 } from "../../../utils";
+import { HStack, Menu, Pressable } from "native-base";
 function BusDetailsScreen({ navigation, route }) {
   const AppCtx = useContext(AppContext);
 
@@ -162,9 +163,45 @@ function BusDetailsScreen({ navigation, route }) {
                     alignItems: "flex-end",
                   }}
                 >
-                  <TouchableOpacity>
+                  {/* <TouchableOpacity>
                     <FontAwesome5 name="ellipsis-h" size={24} color="white" />
-                  </TouchableOpacity>
+                  </TouchableOpacity> */}
+                  <Menu w="190" trigger={triggerProps => {
+                      return <Pressable accessibilityLabel="More " {...triggerProps}>
+                              <FontAwesome5 name="ellipsis-h" size={24} color="white" />
+
+                            </Pressable>;
+                    }}>
+                        
+                        <Menu.Item
+                        px={0}
+                        ml={-0.5}>
+                          <HStack alignItems={'center'} width={'100%'}>
+                            <MaterialCommunityIcons name="sort" size={16} color={'gray'} />
+                            <Text style={{
+                              fontSize: 16,
+                              fontFamily: 'overpass-reg',
+                              marginLeft: 5,
+                              marginTop: 3,
+                              color: 'gray'
+                            }}>Arrange results</Text>
+                          </HStack>
+                        </Menu.Item>
+                        <Menu.Item
+                        px={0}
+                        ml={-0.5}>
+                          <HStack alignItems={'center'} width={'100%'}>
+                            <MaterialIcons name="favorite" size={16} color={COLORS.danger} />
+                            <Text style={{
+                              fontSize: 16,
+                              color: COLORS.danger,
+                              fontFamily: 'overpass-reg',
+                              marginLeft: 5,
+                              marginTop: 3
+                            }}>Love this route</Text>
+                          </HStack>
+                        </Menu.Item>
+                </Menu>
                 </View>
               </View>
             </View>
