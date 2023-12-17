@@ -8,7 +8,7 @@ import { AntDesign, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcon
 import { TextInput } from "react-native-paper";
 import RouteCard from "../../../components/RouteCard";
 import { AppContext } from "../../../store/context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { HStack, Menu, Pressable } from "native-base";
 
 /*
   POINT OF NOTE: there is no way tukawa na duplicates in our trips coz each trip is unique and it can contains 
@@ -18,37 +18,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function DetailsScreen({ navigation }) {
   const AppCtx = useContext(AppContext);
-
-  const [favIcon, setFavIcon] = useState('hearto')
-
-  const handleFavorite = async (tripid) => {
-    if (favIcon === 'hearto') {
-      setFavIcon('heart')
-      let favtrips =  await AsyncStorage.getItem('favorite-trips')
-      if (favtrips) {
-        favtrips = JSON.parse(favtrips)
-        const existingtrip = favtrips.find(val => +val === +tripid)
-
-        if (!existingtrip) {
-          favtrips = [...favtrips, tripid]
-          await AsyncStorage.setItem('favorite-trips', favtrips)
-        }
-      }
-    }
-    else {
-      setFavIcon('hearto')
-      let favtrips =  await AsyncStorage.getItem('favorite-trips')
-
-      if (favtrips) {
-        favtrips = JSON.parse(favtrips)
-        const existingtrip = favtrips.find(val => +val === +tripid)
-
-        if (existingtrip) {
-          favtrips.slice(favtrips.findIndex(val => +val === +tripid) , 1)
-          await AsyncStorage.setItem('favorite-trips', favtrips)
-        }
-      }
-    }
+  const [activeFilterIcon, setActiveFilterIcon] = useState('sort')
+  
+  const updateActiveFilterIcon = (icon) => () => {
+    setActiveFilterIcon(icon)
   }
 
   return (
@@ -182,9 +155,71 @@ function DetailsScreen({ navigation }) {
                     alignItems: "flex-end",
                   }}
                 >
-                  <TouchableOpacity onPress={handleFavorite}>
-                  <AntDesign name={favIcon} size={25} color={'white'} />
-                  </TouchableOpacity>
+                 
+                  <Menu w="190" trigger={triggerProps => {
+                      return <Pressable accessibilityLabel="More " {...triggerProps}>
+                              <MaterialCommunityIcons name={activeFilterIcon} size={24} color={'white'} />
+                            </Pressable>;
+                    }}>
+                        
+                        <Menu.Item
+                          onPress={updateActiveFilterIcon("sort-alphabetical-ascending")}
+                        >
+                          <HStack alignItems={'center'} width={'100%'}>
+                            <MaterialCommunityIcons name="sort-alphabetical-ascending" size={16} color={COLORS.blackGray} />
+                            <Text style={{
+                              fontSize: 16,
+                              fontFamily: 'overpass-reg',
+                              marginLeft: 5,
+                              marginTop: 3,
+                              color: COLORS.blackGray
+                            }}>Bus name</Text>
+                          </HStack>
+                        </Menu.Item>
+
+                        <Menu.Item
+                          onPress={updateActiveFilterIcon("sort-numeric-variant")}
+                        >
+                          <HStack alignItems={'center'} width={'100%'}>
+                            <MaterialCommunityIcons name="sort-numeric-variant" size={16} color={COLORS.blackGray} />
+                            <Text style={{
+                              fontSize: 16,
+                              fontFamily: 'overpass-reg',
+                              marginLeft: 5,
+                              marginTop: 3,
+                              color: COLORS.blackGray
+                            }}>Bus fare</Text>
+                          </HStack>
+                        </Menu.Item>
+                        <Menu.Item
+                          onPress={updateActiveFilterIcon('clock-fast')}
+                        >
+                          <HStack alignItems={'center'} width={'100%'}>
+                            <MaterialCommunityIcons name="clock-fast" size={16} color={COLORS.blackGray} />
+                            <Text style={{
+                              fontSize: 16,
+                              fontFamily: 'overpass-reg',
+                              marginLeft: 5,
+                              marginTop: 3,
+                              color: COLORS.blackGray
+                            }}>Deparature time</Text>
+                          </HStack>
+                        </Menu.Item>
+                        <Menu.Item
+                          onPress={updateActiveFilterIcon('sort')}
+                        >
+                          <HStack alignItems={'center'} width={'100%'}>
+                            <MaterialCommunityIcons name="delete" size={16} color={COLORS.danger} />
+                            <Text style={{
+                              fontSize: 16,
+                              color: COLORS.danger,
+                              fontFamily: 'overpass-reg',
+                              marginLeft: 5,
+                              marginTop: 3
+                            }}>Clear filters</Text>
+                          </HStack>
+                        </Menu.Item>
+                </Menu>
                   
                 </View>
               </View>

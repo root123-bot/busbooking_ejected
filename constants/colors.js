@@ -10,4 +10,5 @@ export const COLORS = {
   darkGray: "#6C757D",
   grayWhite: "#E9ECEF",
   platinum: "#DEE2E6",
+  blackGray: '#495057'
 };

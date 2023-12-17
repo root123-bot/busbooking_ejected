@@ -1,12 +1,11 @@
-import React, { memo, useContext } from "react";
+import React, { memo, useContext, useState } from "react";
 import { View, StyleSheet, Text, Image, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { COLORS } from "../../../constants/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import {
-  FontAwesome,
-  FontAwesome5,
+  AntDesign,
   Ionicons,
   MaterialCommunityIcons,
   MaterialIcons,
@@ -20,7 +19,9 @@ import {
   computeDifferenceBetweenTimes,
   computeTimeTo12Format,
 } from "../../../utils";
-import { HStack, Menu, Pressable } from "native-base";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+
 function BusDetailsScreen({ navigation, route }) {
   const AppCtx = useContext(AppContext);
 
@@ -29,6 +30,38 @@ function BusDetailsScreen({ navigation, route }) {
     computeTimeTo12Format(metadata.bus_departure_time),
     computeTimeTo12Format(metadata.destination_arrival_time)
   );
+  const [favIcon, setFavIcon] = useState('hearto')
+
+
+  const handleFavorite = async (tripid) => {
+    if (favIcon === 'hearto') {
+      setFavIcon('heart')
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+      if (favtrips) {
+        favtrips = JSON.parse(favtrips)
+        const existingtrip = favtrips.find(val => +val === +tripid)
+
+        if (!existingtrip) {
+          favtrips = [...favtrips, tripid]
+          await AsyncStorage.setItem('favorite-trips', favtrips)
+        }
+      }
+    }
+    else {
+      setFavIcon('hearto')
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+
+      if (favtrips) {
+        favtrips = JSON.parse(favtrips)
+        const existingtrip = favtrips.find(val => +val === +tripid)
+
+        if (existingtrip) {
+          favtrips.slice(favtrips.findIndex(val => +val === +tripid) , 1)
+          await AsyncStorage.setItem('favorite-trips', favtrips)
+        }
+      }
+    }
+  }
 
   console.log("Metadata: ", metadata);
   return (
@@ -163,45 +196,10 @@ function BusDetailsScreen({ navigation, route }) {
                     alignItems: "flex-end",
                   }}
                 >
-                  {/* <TouchableOpacity>
-                    <FontAwesome5 name="ellipsis-h" size={24} color="white" />
-                  </TouchableOpacity> */}
-                  <Menu w="190" trigger={triggerProps => {
-                      return <Pressable accessibilityLabel="More " {...triggerProps}>
-                              <FontAwesome5 name="ellipsis-h" size={24} color="white" />
-
-                            </Pressable>;
-                    }}>
-                        
-                        <Menu.Item
-                        px={0}
-                        ml={-0.5}>
-                          <HStack alignItems={'center'} width={'100%'}>
-                            <MaterialCommunityIcons name="sort" size={16} color={'gray'} />
-                            <Text style={{
-                              fontSize: 16,
-                              fontFamily: 'overpass-reg',
-                              marginLeft: 5,
-                              marginTop: 3,
-                              color: 'gray'
-                            }}>Arrange results</Text>
-                          </HStack>
-                        </Menu.Item>
-                        <Menu.Item
-                        px={0}
-                        ml={-0.5}>
-                          <HStack alignItems={'center'} width={'100%'}>
-                            <MaterialIcons name="favorite" size={16} color={COLORS.danger} />
-                            <Text style={{
-                              fontSize: 16,
-                              color: COLORS.danger,
-                              fontFamily: 'overpass-reg',
-                              marginLeft: 5,
-                              marginTop: 3
-                            }}>Love this route</Text>
-                          </HStack>
-                        </Menu.Item>
-                </Menu>
+                   <TouchableOpacity onPress={handleFavorite}>
+                  <AntDesign name={favIcon} size={25} color={'white'} />
+                  </TouchableOpacity>
+                  
                 </View>
               </View>
             </View>
