@@ -16,12 +16,69 @@ import { HStack, Menu, Pressable } from "native-base";
   our api so there is no way to have filtered trips and be the same
 */
 
+
+function sortByBusName(mt) {
+  const metadata = [...mt]
+  const bus_names = metadata.map(val => val.bus_info.bus_name)
+  
+  const sorted = bus_names.sort()
+
+  const new_metadata = []
+  
+  for (let name of sorted) {
+    const foundList = metadata.filter(item => item.bus_info.bus_name === name)
+    
+    if (foundList) {
+      if (foundList.length  === 0) {
+        new_metadata.push(foundList.find(item => item.bus_info.bus_name === name))
+      }
+      else {
+        // we have more that one list, for that case we should check if we have 
+        // already item in new_metadata with that name just track how many items
+        // if there is two then we should go to the second data...
+        const alredy_added =  new_metadata.filter(data => data.bus_info.bus_name === name)
+        
+        if (!alredy_added) {
+          new_metadata.push(foundList.find(item => item.bus_info.bus_name === name))
+        }
+        else {
+          // then here we have the already added data check its length
+          new_metadata.push(foundList[alredy_added.length])
+        }
+      }
+    }
+  }
+  
+  return new_metadata
+} 
+
+
 function DetailsScreen({ navigation }) {
   const AppCtx = useContext(AppContext);
   const [activeFilterIcon, setActiveFilterIcon] = useState('sort')
+  const [trips, setTrips]  = useState(AppCtx.userTripMetadata.founded_trips)
   
+  console.log('TRIPS ', JSON.stringify(AppCtx.userTripMetadata.founded_trips))
+
   const updateActiveFilterIcon = (icon) => () => {
     setActiveFilterIcon(icon)
+
+    switch(icon) {
+      case 'sort':
+        return setTrips(AppCtx.userTripMetadata.founded_trips)
+      case 'sort-alphabetical-ascending':
+        // we need to sort by busname
+        return setTrips(sortByBusName(AppCtx.userTripMetadata.founded_trips))
+      case 'sort-numeric-variant':
+        // we need to sort by busfare
+        const metadata = [...AppCtx.userTripMetadata.founded_trips]
+        return setTrips(metadata.sort((b, a) => a.bus_fare - b.bus_fare))
+      case 'clock-fast':
+        // we need to sort by departure time
+        return;
+      default:
+        return;
+    }
   }
 
   return (
@@ -231,7 +288,7 @@ function DetailsScreen({ navigation }) {
             paddingVertical: 20,
           }}
         >
-          {AppCtx.userTripMetadata.founded_trips.map((value, index) => (
+          {trips.map((value, index) => (
             <RouteCard key={index} metadata={value} />
           ))}
         </ScrollView>

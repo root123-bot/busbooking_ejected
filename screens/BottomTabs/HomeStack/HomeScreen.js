@@ -933,7 +933,7 @@ function HomeScreen({ navigation }) {
                 marginTop: 10,
               }}
             >
-              Popular Routes
+              Favorite Routes
             </Text>
           </View>
           <View
