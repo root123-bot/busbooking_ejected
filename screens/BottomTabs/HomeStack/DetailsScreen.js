@@ -9,13 +9,29 @@ import { TextInput } from "react-native-paper";
 import RouteCard from "../../../components/RouteCard";
 import { AppContext } from "../../../store/context";
 import { HStack, Menu, Pressable } from "native-base";
-
+import moment from "moment";
 /*
   POINT OF NOTE: there is no way tukawa na duplicates in our trips coz each trip is unique and it can contains 
   duplicates of "bookings" but the bookings are inner array found in it so here we resolve the all trips from 
   our api so there is no way to have filtered trips and be the same
 */
 
+function sortByDepartureTime({ mt, ddate}) {
+  let departureDate = JSON.stringify(ddate).split('T')[0]
+  departureDate = departureDate.substring(1)
+  const metadata = [...mt]
+
+  const manipulated_metatada = metadata.map(item => {
+    const date = `${departureDate} ${item.bus_departure_time}`
+    const dtime = moment(date, "YYYY-MM-DD HH:mm").valueOf()
+    return {
+      ...item,
+      dtime
+    }
+  })
+  
+  return manipulated_metatada.sort((a, b) => (a.dtime - b.dtime))
+}
 
 function sortByBusName(mt) {
   const metadata = [...mt]
@@ -57,8 +73,6 @@ function DetailsScreen({ navigation }) {
   const AppCtx = useContext(AppContext);
   const [activeFilterIcon, setActiveFilterIcon] = useState('sort')
   const [trips, setTrips]  = useState(AppCtx.userTripMetadata.founded_trips)
-  
-  console.log('TRIPS ', JSON.stringify(AppCtx.userTripMetadata.founded_trips))
 
   const updateActiveFilterIcon = (icon) => () => {
     setActiveFilterIcon(icon)
@@ -67,15 +81,14 @@ function DetailsScreen({ navigation }) {
       case 'sort':
         return setTrips(AppCtx.userTripMetadata.founded_trips)
       case 'sort-alphabetical-ascending':
-        // we need to sort by busname
         return setTrips(sortByBusName(AppCtx.userTripMetadata.founded_trips))
       case 'sort-numeric-variant':
-        // we need to sort by busfare
         const metadata = [...AppCtx.userTripMetadata.founded_trips]
         return setTrips(metadata.sort((b, a) => a.bus_fare - b.bus_fare))
       case 'clock-fast':
-        // we need to sort by departure time
-        return;
+        const mt = [...AppCtx.userTripMetadata.founded_trips]
+        const output = sortByDepartureTime({mt, ddate: AppCtx.userTripMetadata.departureDate})
+        return setTrips(output);
       default:
         return;
     }
