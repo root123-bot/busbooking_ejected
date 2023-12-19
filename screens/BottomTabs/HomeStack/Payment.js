@@ -205,7 +205,10 @@ function Payment({ route, navigation }) {
                       style={{
                         width: "20%",
                         alignItems: "flex-end",
+                        opacity: 0,
+                      
                       }}
+                      pointerEvents="none"
                     >
                       <TouchableOpacity>
                         <FontAwesome5

@@ -11,7 +11,7 @@ import {
   Alert,
 } from "react-native";
 import { COLORS } from "../../../constants/colors";
-import { Ionicons, FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons, FontAwesome5, AntDesign } from "@expo/vector-icons";
 import { HelperText, Button } from "react-native-paper";
 import * as RNPaper from "react-native-paper";
 import { CustomLine } from "../../../components/ui";
@@ -30,6 +30,7 @@ import CountDownTimer from "react-native-countdown-timer-hooks";
 import { CustomizedLottieMessage } from "../../../components/Messages";
 import { Animation } from "../../../components/ui";
 import { DeleteBooking } from "../../../utils/requests";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width } = Dimensions.get("window");
 // https://dereckquock.com/react-native-looping-opacity-animation
@@ -175,6 +176,8 @@ function FillPassengerInfo({ route, navigation }) {
   const [iNeedToPayNow, setINeedToPayNow] = useState(false);
   const [shouldRemoveFirstBlinkingView, setShouldRemoveFirstBlinkingView] =
     useState(false);
+  const [favIcon, setFavIcon] = useState('hearto')
+
 
   const paymentHandler = () => {
     const nameValid = name.value.trim().length > 0;
@@ -215,6 +218,70 @@ function FillPassengerInfo({ route, navigation }) {
       secondFormattedPhoneNumber: secondFormattedValue,
     });
   };
+
+  const handleFavorite = async (tr) => {
+    const trip = JSON.stringify({
+      from: tr.from,
+      destination: tr.destination,
+      businfo_id: metadata.id
+    })
+    if (favIcon === 'hearto') {
+      setFavIcon('heart')
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+      console.log('FAV ', favtrips)
+      if (favtrips) {
+        favtrips = JSON.parse(favtrips)
+        console.log("fav2 ", favtrips)
+        const existingtrip = favtrips.find(val => val === trip)
+        if (!existingtrip) {
+          favtrips = [...favtrips, trip]
+          await AsyncStorage.setItem('favorite-trips', JSON.stringify(favtrips))
+        }
+      }
+      else {
+        await AsyncStorage.setItem('favorite-trips', JSON.stringify([trip]))
+      }
+    }
+    else {
+      setFavIcon('hearto')
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+
+      if (favtrips) {
+        favtrips = JSON.parse(favtrips)
+        const existingtrip = favtrips.find(val => val === trip)
+
+        if (existingtrip) {
+          favtrips.splice(favtrips.findIndex(val => val === trip) , 1)
+          await AsyncStorage.setItem('favorite-trips', JSON.stringify(favtrips))
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    async function checkIfFavorite() {
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+      const trip = JSON.stringify({
+        from: AppCtx.userTripMetadata.from,
+        destination: AppCtx.userTripMetadata.destination,
+        businfo_id: metadata.id
+      })
+      if (favtrips) {
+        favtrips = JSON.parse(favtrips)
+        const existingtrip = favtrips.find(val => val === trip)
+        if (existingtrip) {
+          setFavIcon('heart')
+        }
+        else {
+          setFavIcon('hearto')
+        }
+      } else {
+        setFavIcon('hearto')
+      }
+    }
+    
+    checkIfFavorite()
+  }, [])
 
   useEffect(() => {
     // kama huyu ni true basi mlazimishe awe false
@@ -477,12 +544,8 @@ function FillPassengerInfo({ route, navigation }) {
                         alignItems: "flex-end",
                       }}
                     >
-                      <TouchableOpacity>
-                        <FontAwesome5
-                          name="ellipsis-h"
-                          size={24}
-                          color="white"
-                        />
+                      <TouchableOpacity onPress={handleFavorite.bind(this, AppCtx.userTripMetadata)}>
+                        <AntDesign name={favIcon} size={25} color={'white'} />
                       </TouchableOpacity>
                     </View>
                   </View>
