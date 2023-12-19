@@ -1,4 +1,4 @@
-import React, { memo, useContext, useState } from "react";
+import React, { memo, useContext, useEffect, useState } from "react";
 import { View, StyleSheet, Text, Image, ScrollView } from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { COLORS } from "../../../constants/colors";
@@ -24,7 +24,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function BusDetailsScreen({ navigation, route }) {
   const AppCtx = useContext(AppContext);
-
   const { metadata } = route.params;
   const timeDifference = computeDifferenceBetweenTimes(
     computeTimeTo12Format(metadata.bus_departure_time),
@@ -32,19 +31,28 @@ function BusDetailsScreen({ navigation, route }) {
   );
   const [favIcon, setFavIcon] = useState('hearto')
 
-
-  const handleFavorite = async (tripid) => {
+  const handleFavorite = async (tr) => {
+    console.log('THIS IS PASSED TRIP ', tr)
+    const trip = JSON.stringify({
+      from: tr.from,
+      destination: tr.destination
+    })
     if (favIcon === 'hearto') {
       setFavIcon('heart')
       let favtrips =  await AsyncStorage.getItem('favorite-trips')
+      console.log('FAV ', favtrips)
       if (favtrips) {
         favtrips = JSON.parse(favtrips)
-        const existingtrip = favtrips.find(val => +val === +tripid)
-
+        console.log("fav2 ", favtrips)
+        const existingtrip = favtrips.find(val => val === trip)
+        console.log('EXISTING TRIP ', existingtrip)
         if (!existingtrip) {
-          favtrips = [...favtrips, tripid]
-          await AsyncStorage.setItem('favorite-trips', favtrips)
+          favtrips = [...favtrips, trip]
+          await AsyncStorage.setItem('favorite-trips', JSON.stringify(favtrips))
         }
+      }
+      else {
+        await AsyncStorage.setItem('favorite-trips', JSON.stringify([trip]))
       }
     }
     else {
@@ -53,17 +61,41 @@ function BusDetailsScreen({ navigation, route }) {
 
       if (favtrips) {
         favtrips = JSON.parse(favtrips)
-        const existingtrip = favtrips.find(val => +val === +tripid)
+        const existingtrip = favtrips.find(val => val === trip)
 
         if (existingtrip) {
-          favtrips.slice(favtrips.findIndex(val => +val === +tripid) , 1)
-          await AsyncStorage.setItem('favorite-trips', favtrips)
+          favtrips.splice(favtrips.findIndex(val => val === trip) , 1)
+          await AsyncStorage.setItem('favorite-trips', JSON.stringify(favtrips))
         }
       }
     }
   }
 
-  console.log("Metadata: ", metadata);
+  useEffect(() => {
+    async function checkIfFavorite() {
+      // await AsyncStorage.removeItem('favorite-trips')
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+      console.log('this is favtrips ', favtrips)
+      const trip = JSON.stringify({
+        from: AppCtx.userTripMetadata.from,
+        destination: AppCtx.userTripMetadata.destination
+      })
+      if (favtrips) {
+        favtrips = JSON.parse(favtrips)
+        const existingtrip = favtrips.find(val => val === trip)
+        if (existingtrip) {
+          setFavIcon('heart')
+        }
+        else {
+          setFavIcon('hearto')
+        }
+      } else {
+        setFavIcon('hearto')
+      }
+    }
+    
+    checkIfFavorite()
+  }, [])
   return (
     <>
       <StatusBar style="light" />
@@ -196,7 +228,7 @@ function BusDetailsScreen({ navigation, route }) {
                     alignItems: "flex-end",
                   }}
                 >
-                   <TouchableOpacity onPress={handleFavorite}>
+                   <TouchableOpacity onPress={handleFavorite.bind(this, AppCtx.userTripMetadata)}>
                   <AntDesign name={favIcon} size={25} color={'white'} />
                   </TouchableOpacity>
                   
