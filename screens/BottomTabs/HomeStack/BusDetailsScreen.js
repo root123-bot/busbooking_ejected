@@ -25,7 +25,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 function BusDetailsScreen({ navigation, route }) {
   const AppCtx = useContext(AppContext);
   const { metadata } = route.params;
-  console.log('METADATA FOR YOU ', metadata.id)
   const timeDifference = computeDifferenceBetweenTimes(
     computeTimeTo12Format(metadata.bus_departure_time),
     computeTimeTo12Format(metadata.destination_arrival_time)
@@ -33,7 +32,6 @@ function BusDetailsScreen({ navigation, route }) {
   const [favIcon, setFavIcon] = useState('hearto')
 
   const handleFavorite = async (tr) => {
-    console.log('THIS IS PASSED TRIP ', tr)
     const trip = JSON.stringify({
       from: tr.from,
       destination: tr.destination,
@@ -47,7 +45,6 @@ function BusDetailsScreen({ navigation, route }) {
         favtrips = JSON.parse(favtrips)
         console.log("fav2 ", favtrips)
         const existingtrip = favtrips.find(val => val === trip)
-        console.log('EXISTING TRIP ', existingtrip)
         if (!existingtrip) {
           favtrips = [...favtrips, trip]
           await AsyncStorage.setItem('favorite-trips', JSON.stringify(favtrips))
@@ -230,8 +227,8 @@ function BusDetailsScreen({ navigation, route }) {
                   }}
                 >
                    <TouchableOpacity onPress={handleFavorite.bind(this, AppCtx.userTripMetadata)}>
-                  <AntDesign name={favIcon} size={25} color={'white'} />
-                  </TouchableOpacity>
+                    <AntDesign name={favIcon} size={25} color={'white'} />
+                   </TouchableOpacity>
                   
                 </View>
               </View>
@@ -624,131 +621,7 @@ function BusDetailsScreen({ navigation, route }) {
                   </RNPaper.Text>
                 </View>
               ))}
-              {/* <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 12,
-                  alignItems: "center",
-                }}
-              >
-                <RNPaper.Text
-                  style={{
-                    fontWeight: "bold",
-                    color: COLORS.lightGrey,
-                  }}
-                >
-                  Cabin Baggage 7 Kg
-                </RNPaper.Text>
-                <RNPaper.Text
-                  style={{
-                    color: "grey",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Free
-                </RNPaper.Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 12,
-                  alignItems: "center",
-                }}
-              >
-                <RNPaper.Text
-                  style={{
-                    fontWeight: "bold",
-                    color: COLORS.lightGrey,
-                  }}
-                >
-                  -15 kg baggage
-                </RNPaper.Text>
-                <RNPaper.Text
-                  style={{
-                    color: "grey",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Free
-                </RNPaper.Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 12,
-                  alignItems: "center",
-                }}
-              >
-                <RNPaper.Text
-                  style={{
-                    fontWeight: "bold",
-                    color: COLORS.lightGrey,
-                  }}
-                >
-                  +15 kg baggage
-                </RNPaper.Text>
-                <RNPaper.Text
-                  style={{
-                    color: "grey",
-                    fontWeight: "bold",
-                  }}
-                >
-                  $15
-                </RNPaper.Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 12,
-                  alignItems: "center",
-                }}
-              >
-                <RNPaper.Text
-                  style={{
-                    fontWeight: "bold",
-                    color: COLORS.lightGrey,
-                  }}
-                >
-                  +25 kg baggage
-                </RNPaper.Text>
-                <RNPaper.Text
-                  style={{
-                    color: "grey",
-                    fontWeight: "bold",
-                  }}
-                >
-                  $25
-                </RNPaper.Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  marginTop: 12,
-                  alignItems: "center",
-                }}
-              >
-                <RNPaper.Text
-                  style={{
-                    fontWeight: "bold",
-                    color: COLORS.lightGrey,
-                  }}
-                >
-                  +50 kg baggage
-                </RNPaper.Text>
-                <RNPaper.Text
-                  style={{
-                    color: "grey",
-                    fontWeight: "bold",
-                  }}
-                >
-                  $45
-                </RNPaper.Text>
-              </View> */}
+
             </View>
           </View>
         </ScrollView>

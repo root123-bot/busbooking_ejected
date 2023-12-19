@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React, { memo, useContext, useState } from "react";
+import React, { memo, useContext, useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -10,7 +10,7 @@ import {
   Alert,
 } from "react-native";
 import { COLORS } from "../../../constants/colors";
-import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { AntDesign, Ionicons } from "@expo/vector-icons";
 import * as RNPaper from "react-native-paper";
 import { HelperText } from "react-native-paper";
 import { CustomLine } from "../../../components/ui";
@@ -20,6 +20,7 @@ import { computeTimeTo12Format } from "../../../utils";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import { CreateBooking } from "../../../utils/requests";
 import { TransparentPopUpIconMessage } from "../../../components/Messages";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function PickSeatsScreen({ route, navigation }) {
   const { metadata } = route.params;
@@ -36,6 +37,7 @@ function PickSeatsScreen({ route, navigation }) {
   const [formSubmitLoader, setFormSubmitLoader] = useState(false);
   const [message, setMessage] = useState("");
   const [icon, setIcon] = useState("");
+  const [favIcon, setFavIcon] = useState('hearto')
 
   const bookSeatsHandler = () => {
     if (!AppCtx.isAunthenticated) {
@@ -134,6 +136,72 @@ function PickSeatsScreen({ route, navigation }) {
         }, 1000);
       });
   };
+
+
+  const handleFavorite = async (tr) => {
+    const trip = JSON.stringify({
+      from: tr.from,
+      destination: tr.destination,
+      businfo_id: metadata.id
+    })
+    if (favIcon === 'hearto') {
+      setFavIcon('heart')
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+      console.log('FAV ', favtrips)
+      if (favtrips) {
+        favtrips = JSON.parse(favtrips)
+        console.log("fav2 ", favtrips)
+        const existingtrip = favtrips.find(val => val === trip)
+        if (!existingtrip) {
+          favtrips = [...favtrips, trip]
+          await AsyncStorage.setItem('favorite-trips', JSON.stringify(favtrips))
+        }
+      }
+      else {
+        await AsyncStorage.setItem('favorite-trips', JSON.stringify([trip]))
+      }
+    }
+    else {
+      setFavIcon('hearto')
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+
+      if (favtrips) {
+        favtrips = JSON.parse(favtrips)
+        const existingtrip = favtrips.find(val => val === trip)
+
+        if (existingtrip) {
+          favtrips.splice(favtrips.findIndex(val => val === trip) , 1)
+          await AsyncStorage.setItem('favorite-trips', JSON.stringify(favtrips))
+        }
+      }
+    }
+  }
+
+  useEffect(() => {
+    async function checkIfFavorite() {
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+      const trip = JSON.stringify({
+        from: AppCtx.userTripMetadata.from,
+        destination: AppCtx.userTripMetadata.destination,
+        businfo_id: metadata.id
+      })
+      if (favtrips) {
+        favtrips = JSON.parse(favtrips)
+        const existingtrip = favtrips.find(val => val === trip)
+        if (existingtrip) {
+          setFavIcon('heart')
+        }
+        else {
+          setFavIcon('hearto')
+        }
+      } else {
+        setFavIcon('hearto')
+      }
+    }
+    
+    checkIfFavorite()
+  }, [])
+
   return (
     <>
       <StatusBar style="light" />
@@ -292,8 +360,8 @@ function PickSeatsScreen({ route, navigation }) {
                       alignItems: "flex-end",
                     }}
                   >
-                    <TouchableOpacity>
-                      <FontAwesome5 name="ellipsis-h" size={24} color="white" />
+                    <TouchableOpacity onPress={handleFavorite.bind(this, AppCtx.userTripMetadata)}>
+                      <AntDesign name={favIcon} size={25} color={'white'} />
                     </TouchableOpacity>
                   </View>
                 </View>
