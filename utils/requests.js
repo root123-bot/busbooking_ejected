@@ -277,3 +277,23 @@ export const DeleteBooking = async (formData) => {
     }
   });
 };
+
+export const CustomerPaidBookings = async (user_id) => {
+  return fetch(`${BASE_URL}/api/customerbookings/`, {
+    method: 'POST',
+    body: JSON.stringify({
+      user_id
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if(response.ok) {
+      return response.json().then((data) => Promise.resolve(data))
+    } else {
+      return response.json().then((data) => {
+        return Promise.reject(data.details)
+      })
+    }
+  })
+}

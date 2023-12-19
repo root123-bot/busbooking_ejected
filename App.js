@@ -2,13 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
 import {
   StyleSheet,
-  Text,
-  TouchableOpacity,
   View,
-  Image,
-  Alert,
-  BackHandler,
-  useWindowDimensions,
 } from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import {
