@@ -23,6 +23,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { height } = Dimensions.get("window");
 
+const removeDuplicatedTrips = (trips) => {
+  // lets remove a given key from the objects js
+  let result = trips.map(val => ({ from: JSON.parse(val).from, destination: JSON.parse(val).destination}))
+  result = result.map( val => JSON.stringify(val))
+  result = Array.from(new Set(result))
+  return result.map(val => JSON.parse(val))
+}
+
 export function StyledRoutCard() {
   return (
     <View
@@ -380,7 +388,8 @@ function HomeScreen({ navigation }) {
       let favtrips =  await AsyncStorage.getItem('favorite-trips')
       console.log('Favtrips ', favtrips)
       if (favtrips) {
-        setFavTrips(JSON.parse(favtrips))
+        const result = removeDuplicatedTrips(JSON.parse(favtrips))
+        setFavTrips(result)
       }
     }
     getFavTrips()
@@ -981,7 +990,7 @@ function HomeScreen({ navigation }) {
                   {
                     favTrips.map((item, _) => (
 
-                    <>
+                    <View key={_}>
                   <Pressable
                     onPress={() => console.log('HELLO WORLD')}
                     style={{
@@ -1003,7 +1012,7 @@ function HomeScreen({ navigation }) {
                         }}
                         numberOfLines={1}
                       >
-                        Dar es salaam
+                        { item.from }
                       </Text>
                     </View>
                     <Image
@@ -1026,14 +1035,14 @@ function HomeScreen({ navigation }) {
                         }}
                         numberOfLines={1}
                       >
-                        Tunduma
+                        { item.destination }
                       </Text>
                     </View>
                   </Pressable>
                   { _ + 1 !== favTrips.length && (
                     <CustomLine style={{ marginBottom: 0, marginHorizontal: 5 }} />
                   )}
-                  </>
+                  </View>
                   ))
                 }
                 </View>
