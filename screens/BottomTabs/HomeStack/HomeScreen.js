@@ -24,7 +24,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const { height } = Dimensions.get("window");
 
 const removeDuplicatedTrips = (trips) => {
-  // lets remove a given key from the objects js
   let result = trips.map(val => ({ from: JSON.parse(val).from, destination: JSON.parse(val).destination}))
   result = result.map( val => JSON.stringify(val))
   result = Array.from(new Set(result))
@@ -208,6 +207,8 @@ function HomeScreen({ navigation }) {
     setShowPicker(!showPicker);
   };
 
+
+
   // console.log("Departure time ", departureDate);
 
   const executeCoreLogics = () => {
@@ -286,6 +287,66 @@ function HomeScreen({ navigation }) {
   const showTimepicker = () => {
     showMode("time");
   };
+
+  const searchFavTripHandler = (metadata) => {
+    setFormSubmitLoader(true);
+    setShowAnimation(true)
+
+    const day = getDayName(new Date(departureDate).getDay());
+    // we'll check about passengers, if we should take only 1 or just reflect selected above
+
+    const result = AppCtx.trips
+      .filter(
+        (trip) =>
+          trip.bus_source.toLowerCase() === metadata.from.toLowerCase() &&
+          trip.bus_destination.toLowerCase() === metadata.destination.toLowerCase() &&
+          trip.day.toLowerCase() === day.toLowerCase()
+      )
+      .filter((trip) =>
+        trip.day.toLowerCase() === day.toLowerCase() &&
+        trip.bus_info.bookings_metadata.length === 0
+          ? trip.bus_info.seat_layout.total_seats >= passengers
+          : trip.bus_info.bookings_metadata.filter(
+              (value) =>
+                getDayName(new Date(value.trip_date).getDay()).toLowerCase() ===
+                  day.toLowerCase() && +value.available_seats >= +passengers
+            ).length > 0
+      );
+    
+    if (result.length === 0) {
+      setIcon("error-outline");
+      setMessage("No trip found");
+      setTimeout(() => {
+        setShowAnimation(false);
+        setTimeout(() => {
+          setFormSubmitLoader(false);
+        }, 1500);
+      }, 1500);
+      return;
+    }
+
+    const rearranged = [...result].sort((a, b) => a.bus_fare - b.bus_fare);
+
+    setIcon("check-circle-outline");
+    setMessage("Trips found");
+    const mt = {
+      from: metadata.from,
+      destination: metadata.destination,
+      passengers,
+      departureDate,
+      founded_trips: rearranged,
+    };
+    AppCtx.updateUserTripMetadata(mt);
+    setTimeout(() => {
+      setShowAnimation(false);
+      setTimeout(() => {
+        setFormSubmitLoader(false);
+        navigation.navigate("RouteSearchDetails", {
+          trips: rearranged,
+        });
+      }, 500);
+    }, 500);
+  }
 
   const searchTripHandler = () => {
     // make sure passenger is not more than 3
@@ -963,7 +1024,11 @@ function HomeScreen({ navigation }) {
                   fontFamily: 'montserrat-17',
                   color: COLORS.secondary,
                   lineHeight: 15
-                }}>Trip date is {departureDate.toLocaleDateString()}, to change set the departure date above</HelperText>
+                }}>Trip date is <Text style={{
+                  color: COLORS.danger
+                }}>{departureDate.toLocaleDateString()}</Text> and <Text style={{
+                  color: COLORS.danger
+                }}>{passengers}</Text> total passengers, to change set the departure date and passengers on above top form</HelperText>
               </View>
               <View
                 style={{
@@ -993,7 +1058,7 @@ function HomeScreen({ navigation }) {
 
                     <View key={_}>
                   <Pressable
-                    onPress={() => console.log('HELLO WORLD')}
+                    onPress={searchFavTripHandler.bind(this, item)}
                     style={{
                       padding: 10,
                       paddingVertical: 15,
