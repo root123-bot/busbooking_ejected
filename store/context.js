@@ -3,6 +3,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { BASE_URL } from "../constants/domain";
 import { _cacheImages } from "../utils";
 import { fetchAvatars, fetchTrips } from "../utils/requests";
+import { removeDuplicatedTrips } from "../utils";
 
 export const AppContext = createContext({
   isAunthenticated: false,
@@ -22,6 +23,7 @@ export const AppContext = createContext({
   userTripMetadata: null,
   pickSeatScreenMetadata: {},
   afterLoginNext: null,
+  favTrips: null,
   manipulateIsAunthenticated: (value) => {},
   manipulateUserMetadata: (metadata) => {},
   manipulateFavIcon: (icon) => {},
@@ -40,6 +42,8 @@ export const AppContext = createContext({
   updateUserTripMetadata: (metadata) => {},
   manipulatePickSeatScreenMetadata: (metadata) => {},
   manipulateAfterLoginNext: (next) => {},
+  manipulateFavTrips: (mt) => {},
+  updateFavTrips: (mt) => {}
 });
 
 function AppContextProvider({ children }) {
@@ -56,6 +60,7 @@ function AppContextProvider({ children }) {
   const [finishedCachingAvatars, setFinishedCachingAvatars] = useState(false);
   const [stillExecutingUserMetadata, setStillExecutingUserMetadata] =
     useState(true);
+  const [favTrips, setFavTrips] = useState()
   const [trips, setTrips] = useState([]);
   const [afterLoginNext, setAfterLoginNext] = useState(null);
   const [userTripMetadata, setUserTripMetadata] = useState(null);
@@ -83,6 +88,20 @@ function AppContextProvider({ children }) {
 
   function manipulateStillFetchingTrips(status) {
     setStillFetchingTrips(status);
+  }
+
+  function updateFavTrips(mt) {
+    setFavTrips(mt)
+  }
+
+  function manipulateFavTrips(mt) {
+    const { metadata, status} = mt
+    if (status === 'add') {
+
+    }
+    if (status === 'remove') {
+      
+    }
   }
 
   function manipulatePickSeatScreenMetadata(metadata) {
@@ -286,6 +305,18 @@ function AppContextProvider({ children }) {
     getTrips();
   }, []);
 
+  useEffect(() => {
+    const getFavTrips = async() => {
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+      if (favtrips) {
+        const result = removeDuplicatedTrips(JSON.parse(favtrips))
+        console.log('this is results for you ', result)
+        setFavTrips(result)
+      }
+    }
+    getFavTrips()
+  }, [])
+
   const value = {
     isAunthenticated,
     usermetadata,
@@ -304,6 +335,7 @@ function AppContextProvider({ children }) {
     userTripMetadata,
     pickSeatScreenMetadata,
     afterLoginNext,
+    favTrips,
     manipulateIsAunthenticated,
     manipulateUserMetadata,
     manipulateFavIcon,
@@ -322,6 +354,8 @@ function AppContextProvider({ children }) {
     updateUserTripMetadata,
     manipulatePickSeatScreenMetadata,
     manipulateAfterLoginNext,
+    updateFavTrips,
+    manipulateFavTrips
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

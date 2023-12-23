@@ -85,3 +85,11 @@ export const computeDifferenceBetweenTimes = (start, end) => {
 
   return `${hours}h ${minutes}m`;
 };
+
+
+export const removeDuplicatedTrips = (trips) => {
+  let result = trips.map(val => ({ from: JSON.parse(val).from, destination: JSON.parse(val).destination}))
+  result = result.map( val => JSON.stringify(val))
+  result = Array.from(new Set(result))
+  return result.map(val => JSON.parse(val))
+}

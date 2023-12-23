@@ -19,16 +19,10 @@ import { CustomLine } from "../../../components/ui";
 import { AppContext } from "../../../store/context";
 import { TransparentPopUpIconMessage } from "../../../components/Messages";
 import { Skeleton, Box } from "native-base";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
+// import { removeDuplicatedTrips } from "../../../utils";
 
 const { height } = Dimensions.get("window");
-
-const removeDuplicatedTrips = (trips) => {
-  let result = trips.map(val => ({ from: JSON.parse(val).from, destination: JSON.parse(val).destination}))
-  result = result.map( val => JSON.stringify(val))
-  result = Array.from(new Set(result))
-  return result.map(val => JSON.parse(val))
-}
 
 export function StyledRoutCard() {
   return (
@@ -444,17 +438,17 @@ function HomeScreen({ navigation }) {
     executeCoreLogics();
   }, []);
 
-  useEffect(() => {
-    const getFavTrips = async() => {
-      let favtrips =  await AsyncStorage.getItem('favorite-trips')
-      console.log('Favtrips ', favtrips)
-      if (favtrips) {
-        const result = removeDuplicatedTrips(JSON.parse(favtrips))
-        setFavTrips(result)
-      }
-    }
-    getFavTrips()
-  }, [])
+  // useEffect(() => {
+  //   const getFavTrips = async() => {
+  //     let favtrips =  await AsyncStorage.getItem('favorite-trips')
+  //     console.log('Favtrips ', favtrips)
+  //     if (favtrips) {
+  //       const result = removeDuplicatedTrips(JSON.parse(favtrips))
+  //       setFavTrips(result)
+  //     }
+  //   }
+  //   getFavTrips()
+  // }, [])
 
   if (AppCtx.stillFetchingTrips || AppCtx.stillFetchingAvatars) {
     return (
@@ -974,7 +968,7 @@ function HomeScreen({ navigation }) {
                 <TextInput
                   mode="outlined"
                   disabled={true}
-                  left={<TextInput.Icon icon="calendar-range-outline" />}
+                  left={<TextInput.Icon pointerEvents="none" icon="calendar-range-outline" />}
                   value={departureDate.toDateString()}
                   label={"Departure"}
                   style={{
@@ -984,7 +978,7 @@ function HomeScreen({ navigation }) {
                 <TextInput
                   mode="outlined"
                   disabled
-                  left={<TextInput.Icon icon="account" />}
+                  left={<TextInput.Icon pointerEvents="none" icon="account" />}
                   onChangeText={(text) => setPassengers(text)}
                   value={"1"}
                   label={"Passengers"}
@@ -997,7 +991,7 @@ function HomeScreen({ navigation }) {
             </View>
           </View>
           {
-            favTrips && (
+            AppCtx.favTrips && (
               <>
               <View
                 style={{
@@ -1028,7 +1022,7 @@ function HomeScreen({ navigation }) {
                   color: COLORS.danger
                 }}>{departureDate.toLocaleDateString()}</Text> and <Text style={{
                   color: COLORS.danger
-                }}>{passengers}</Text> total passengers, to change set the departure date and passengers on above top form</HelperText>
+                }}>{passengers} total passengers</Text>, to change set the departure date and passengers on above top form</HelperText>
               </View>
               <View
                 style={{
@@ -1054,7 +1048,7 @@ function HomeScreen({ navigation }) {
                   }}
                 >
                   {
-                    favTrips.map((item, _) => (
+                    AppCtx.favTrips.map((item, _) => (
 
                     <View key={_}>
                   <Pressable
@@ -1105,7 +1099,7 @@ function HomeScreen({ navigation }) {
                       </Text>
                     </View>
                   </Pressable>
-                  { _ + 1 !== favTrips.length && (
+                  { _ + 1 !== AppCtx.favTrips.length && (
                     <CustomLine style={{ marginBottom: 0, marginHorizontal: 5 }} />
                   )}
                   </View>
