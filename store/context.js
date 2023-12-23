@@ -94,7 +94,7 @@ function AppContextProvider({ children }) {
     setFavTrips(mt)
   }
 
-  function manipulateFavTrips(mt) {
+  async function manipulateFavTrips(mt) {
     const { metadata, status} = mt
     if (status === 'add') {
 
@@ -117,6 +117,26 @@ function AppContextProvider({ children }) {
       }
     }
     if (status === 'remove') {
+      // the logic behind here is to check the number of occurance in context if we have the
+      // more than one data having the same destination and from then no need to delete the 
+      // favorite because there is many saved favorite but if there is only one then we can
+      // delete it, we can adjust the number in context by user do and undo favorite on route
+      let data =  await AsyncStorage.getItem('favorite-trips')
+      data = JSON.parse(data)
+      data = data.map(val => JSON.parse(val))
+
+      const filtered = data.filter((val, _) => 
+        val.from.toLowerCase() === metadata.from.toLowerCase() && 
+        val.destination.toLowerCase() === metadata.destination.toLowerCase()
+      )
+
+
+      // if filtered is greater than one then we know there is more than one trip has been added as favorite
+      // so no need to remove it..
+      if (filtered.length > 1) {
+        return;
+      }
+
       const existing = favTrips.find(item => item.from === metadata.from && item.destination === metadata.destination)
 
       if(existing) {
@@ -334,7 +354,7 @@ function AppContextProvider({ children }) {
       let favtrips =  await AsyncStorage.getItem('favorite-trips')
       if (favtrips) {
         const result = removeDuplicatedTrips(JSON.parse(favtrips))
-        console.log('this is results for you ', result)
+        console.log('this is results for you ', result.reverse())
         setFavTrips(result)
       }
     }
