@@ -955,12 +955,7 @@ function HomeScreen({ navigation }) {
                   color: COLORS.secondary
                 }}>Trip date is 11/12/2023, change it above on first box</HelperText>
               </View>
-              {
-                favTrips.map((item, _) => (
-
-                
               <View
-                  key={_}
                 style={{
                   width: "85%",
                   marginLeft: "auto",
@@ -973,7 +968,6 @@ function HomeScreen({ navigation }) {
                   style={{
                     backgroundColor: COLORS.light,
                     borderRadius: 15,
-                    padding: 13,
                     shadowColor: "black",
                     shadowOffset: {
                       width: 0,
@@ -984,9 +978,15 @@ function HomeScreen({ navigation }) {
                     shadowRadius: 3.84,
                   }}
                 >
-                  <View
+                  {
+                    favTrips.map((item, _) => (
+
+                    <>
+                  <Pressable
+                    onPress={() => console.log('HELLO WORLD')}
                     style={{
-                      marginVertical: 10,
+                      padding: 10,
+                      paddingVertical: 15,
                       flexDirection: "row",
                       alignItems: "center",
                     }}
@@ -1003,7 +1003,7 @@ function HomeScreen({ navigation }) {
                         }}
                         numberOfLines={1}
                       >
-                        {JSON.parse(item).from}
+                        Dar es salaam
                       </Text>
                     </View>
                     <Image
@@ -1026,19 +1026,19 @@ function HomeScreen({ navigation }) {
                         }}
                         numberOfLines={1}
                       >
-                        {JSON.parse(item).destination}
+                        Tunduma
                       </Text>
                     </View>
-                  </View>
-                  {
-                    _ + 1 !== favTrips.length && (
-                      <CustomLine />
-                    )
-                  }
+                  </Pressable>
+                  { _ + 1 !== favTrips.length && (
+                    <CustomLine style={{ marginBottom: 0, marginHorizontal: 5 }} />
+                  )}
+                  </>
+                  ))
+                }
                 </View>
               </View>
-              ))
-            }
+              
           </>
           )
           }
