@@ -991,7 +991,7 @@ function HomeScreen({ navigation }) {
             </View>
           </View>
           {
-            AppCtx.favTrips && (
+            AppCtx.favTrips.length !== 0 && (
               <>
               <View
                 style={{

@@ -23,7 +23,7 @@ export const AppContext = createContext({
   userTripMetadata: null,
   pickSeatScreenMetadata: {},
   afterLoginNext: null,
-  favTrips: null,
+  favTrips: [],
   manipulateIsAunthenticated: (value) => {},
   manipulateUserMetadata: (metadata) => {},
   manipulateFavIcon: (icon) => {},
@@ -60,7 +60,7 @@ function AppContextProvider({ children }) {
   const [finishedCachingAvatars, setFinishedCachingAvatars] = useState(false);
   const [stillExecutingUserMetadata, setStillExecutingUserMetadata] =
     useState(true);
-  const [favTrips, setFavTrips] = useState()
+  const [favTrips, setFavTrips] = useState([])
   const [trips, setTrips] = useState([]);
   const [afterLoginNext, setAfterLoginNext] = useState(null);
   const [userTripMetadata, setUserTripMetadata] = useState(null);
@@ -98,9 +98,33 @@ function AppContextProvider({ children }) {
     const { metadata, status} = mt
     if (status === 'add') {
 
+      let isTripExist = false
+      for (let item of favTrips) {
+        if (
+          item.destination.toLowerCase() === metadata.destination.toLowerCase() && 
+          item.from.toLowerCase() === metadata.from.toLowerCase()
+        ) {
+          isTripExist = true
+          break;
+        }
+      }
+      if (!isTripExist) {
+        // we need to add that to favTrips
+        setFavTrips(prevState => ([
+          { from: metadata.from, destination: metadata.destination},
+          ...prevState
+        ]))
+      }
     }
     if (status === 'remove') {
-      
+      const existing = favTrips.find(item => item.from === metadata.from && item.destination === metadata.destination)
+
+      if(existing) {
+        // then we should remove it
+        const ft = [...favTrips]
+        ft.splice(ft.findIndex(item => item.from === metadata.from && item.destination === metadata.destination), 1)
+        setFavTrips(ft)
+      }
     }
   }
 

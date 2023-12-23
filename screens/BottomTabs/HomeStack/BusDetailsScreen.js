@@ -25,7 +25,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 function BusDetailsScreen({ navigation, route }) {
   const AppCtx = useContext(AppContext);
   const { metadata } = route.params;
-  console.log('THIS IS TRIP METADATA FOR YOU ', metadata)
   const timeDifference = computeDifferenceBetweenTimes(
     computeTimeTo12Format(metadata.bus_departure_time),
     computeTimeTo12Format(metadata.destination_arrival_time)
@@ -39,6 +38,10 @@ function BusDetailsScreen({ navigation, route }) {
       trip_id: metadata.id
     })
     if (favIcon === 'hearto') {
+      AppCtx.manipulateFavTrips({
+        metadata: JSON.parse(trip),
+        status: 'add'
+      })
       setFavIcon('heart')
       let favtrips =  await AsyncStorage.getItem('favorite-trips')
       console.log('FAV ', favtrips)
@@ -58,7 +61,10 @@ function BusDetailsScreen({ navigation, route }) {
     else {
       setFavIcon('hearto')
       let favtrips =  await AsyncStorage.getItem('favorite-trips')
-
+      AppCtx.manipulateFavTrips({
+        metadata: JSON.parse(trip),
+        status: 'remove'
+      })
       if (favtrips) {
         favtrips = JSON.parse(favtrips)
         const existingtrip = favtrips.find(val => val === trip)
@@ -73,6 +79,7 @@ function BusDetailsScreen({ navigation, route }) {
 
   useEffect(() => {
     async function checkIfFavorite() {
+      console.log('this is from context ', AppCtx.favTrips)
       let favtrips =  await AsyncStorage.getItem('favorite-trips')
       const trip = JSON.stringify({
         from: AppCtx.userTripMetadata.from,

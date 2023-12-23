@@ -226,6 +226,10 @@ function FillPassengerInfo({ route, navigation }) {
       trip_id: metadata.id
     })
     if (favIcon === 'hearto') {
+      AppCtx.manipulateFavTrips({
+        metadata: JSON.parse(trip),
+        status: 'add'
+      })
       setFavIcon('heart')
       let favtrips =  await AsyncStorage.getItem('favorite-trips')
       console.log('FAV ', favtrips)
@@ -245,7 +249,10 @@ function FillPassengerInfo({ route, navigation }) {
     else {
       setFavIcon('hearto')
       let favtrips =  await AsyncStorage.getItem('favorite-trips')
-
+      AppCtx.manipulateFavTrips({
+        metadata: JSON.parse(trip),
+        status: 'remove'
+      })
       if (favtrips) {
         favtrips = JSON.parse(favtrips)
         const existingtrip = favtrips.find(val => val === trip)
