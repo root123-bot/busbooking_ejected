@@ -961,8 +961,9 @@ function HomeScreen({ navigation }) {
                   paddingTop: 0,
                   marginTop: 0,
                   fontFamily: 'montserrat-17',
-                  color: COLORS.secondary
-                }}>Trip date is 11/12/2023, change it above on first box</HelperText>
+                  color: COLORS.secondary,
+                  lineHeight: 15
+                }}>Trip date is {departureDate.toLocaleDateString()}, to change set the departure date above</HelperText>
               </View>
               <View
                 style={{
