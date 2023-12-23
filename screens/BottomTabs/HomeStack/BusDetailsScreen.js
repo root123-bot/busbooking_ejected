@@ -25,6 +25,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 function BusDetailsScreen({ navigation, route }) {
   const AppCtx = useContext(AppContext);
   const { metadata } = route.params;
+  console.log('THIS IS TRIP METADATA FOR YOU ', metadata)
   const timeDifference = computeDifferenceBetweenTimes(
     computeTimeTo12Format(metadata.bus_departure_time),
     computeTimeTo12Format(metadata.destination_arrival_time)
@@ -35,7 +36,7 @@ function BusDetailsScreen({ navigation, route }) {
     const trip = JSON.stringify({
       from: tr.from,
       destination: tr.destination,
-      businfo_id: metadata.id
+      trip_id: metadata.id
     })
     if (favIcon === 'hearto') {
       setFavIcon('heart')
@@ -76,7 +77,7 @@ function BusDetailsScreen({ navigation, route }) {
       const trip = JSON.stringify({
         from: AppCtx.userTripMetadata.from,
         destination: AppCtx.userTripMetadata.destination,
-        businfo_id: metadata.id
+        trip_id: metadata.id
       })
       if (favtrips) {
         favtrips = JSON.parse(favtrips)

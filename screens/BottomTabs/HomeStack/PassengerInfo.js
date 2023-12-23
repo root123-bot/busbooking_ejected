@@ -223,7 +223,7 @@ function FillPassengerInfo({ route, navigation }) {
     const trip = JSON.stringify({
       from: tr.from,
       destination: tr.destination,
-      businfo_id: metadata.id
+      trip_id: metadata.id
     })
     if (favIcon === 'hearto') {
       setFavIcon('heart')
@@ -264,7 +264,7 @@ function FillPassengerInfo({ route, navigation }) {
       const trip = JSON.stringify({
         from: AppCtx.userTripMetadata.from,
         destination: AppCtx.userTripMetadata.destination,
-        businfo_id: metadata.id
+        trip_id: metadata.id
       })
       if (favtrips) {
         favtrips = JSON.parse(favtrips)

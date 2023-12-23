@@ -11,19 +11,15 @@ import {
   Platform,
   ScrollView,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { COLORS } from "../../../constants/colors";
-import SearchBar from "../../../components/SearchBar";
-import { Button, TextInput } from "react-native-paper";
+import { Button, HelperText, TextInput } from "react-native-paper";
 import { Picker } from "@react-native-picker/picker";
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Ionicons } from "@expo/vector-icons";
 import { CustomLine } from "../../../components/ui";
-import * as RNPaper from "react-native-paper";
 import { AppContext } from "../../../store/context";
-import { LoadingSpinner } from "../../../components/ui";
 import { TransparentPopUpIconMessage } from "../../../components/Messages";
-import { Skeleton, Box, VStack, HStack } from "native-base";
+import { Skeleton, Box } from "native-base";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { height } = Dimensions.get("window");
 
@@ -197,6 +193,7 @@ function HomeScreen({ navigation }) {
   const [formSubmitLoader, setFormSubmitLoader] = useState(false);
   const [message, setMessage] = useState("");
   const [icon, setIcon] = useState("");
+  const [favTrips, setFavTrips] = useState()
 
   const toggleDatePicker = () => {
     console.log('im get called by you ')
@@ -377,6 +374,16 @@ function HomeScreen({ navigation }) {
   useEffect(() => {
     executeCoreLogics();
   }, []);
+
+  useEffect(() => {
+    (async() => {
+      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+      console.log('Favtrips ', favtrips)
+      if (favTrips) {
+        setFavTrips(JSON.parse(favtrips))
+      }
+    })()
+  }, [])
 
   if (AppCtx.stillFetchingTrips || AppCtx.stillFetchingAvatars) {
     return (
@@ -931,10 +938,18 @@ function HomeScreen({ navigation }) {
                 fontFamily: "overpass-reg",
                 color: "black",
                 marginTop: 10,
+                marginBottom: 0,
+                paddingBottom: 0
               }}
             >
-              Favorite Routes
+              Favorite Trips
             </Text>
+            <HelperText padding="none" style={{
+              paddingTop: 0,
+              marginTop: 0,
+              fontFamily: 'montserrat-17',
+              color: COLORS.secondary
+            }}>Trip date is 11/12/2023, change it above on first box</HelperText>
           </View>
           <View
             style={{

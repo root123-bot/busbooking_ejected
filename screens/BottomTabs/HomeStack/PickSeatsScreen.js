@@ -142,7 +142,7 @@ function PickSeatsScreen({ route, navigation }) {
     const trip = JSON.stringify({
       from: tr.from,
       destination: tr.destination,
-      businfo_id: metadata.id
+      trip_id: metadata.id
     })
     if (favIcon === 'hearto') {
       setFavIcon('heart')
@@ -183,7 +183,7 @@ function PickSeatsScreen({ route, navigation }) {
       const trip = JSON.stringify({
         from: AppCtx.userTripMetadata.from,
         destination: AppCtx.userTripMetadata.destination,
-        businfo_id: metadata.id
+        trip_id: metadata.id
       })
       if (favtrips) {
         favtrips = JSON.parse(favtrips)
@@ -627,7 +627,7 @@ function PickSeatsScreen({ route, navigation }) {
                 >
                   <SeatsLayout
                     // maxSeatToSelect={3}
-                    row={10}
+                    row={metadata.bus_info.seat_layout.rows}
                     layout={{ columnOne: 1, columnTwo: 2 }}
                     selectedSeats={[
                       ...booked_seats.map((val) => ({
