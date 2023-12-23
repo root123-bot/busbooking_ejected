@@ -376,13 +376,14 @@ function HomeScreen({ navigation }) {
   }, []);
 
   useEffect(() => {
-    (async() => {
+    const getFavTrips = async() => {
       let favtrips =  await AsyncStorage.getItem('favorite-trips')
       console.log('Favtrips ', favtrips)
-      if (favTrips) {
+      if (favtrips) {
         setFavTrips(JSON.parse(favtrips))
       }
-    })()
+    }
+    getFavTrips()
   }, [])
 
   if (AppCtx.stillFetchingTrips || AppCtx.stillFetchingAvatars) {
@@ -925,203 +926,122 @@ function HomeScreen({ navigation }) {
               </View>
             </View>
           </View>
-          <View
-            style={{
-              width: "85%",
-              marginLeft: "auto",
-              marginRight: "auto",
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                fontFamily: "overpass-reg",
-                color: "black",
-                marginTop: 10,
-                marginBottom: 0,
-                paddingBottom: 0
-              }}
-            >
-              Favorite Trips
-            </Text>
-            <HelperText padding="none" style={{
-              paddingTop: 0,
-              marginTop: 0,
-              fontFamily: 'montserrat-17',
-              color: COLORS.secondary
-            }}>Trip date is 11/12/2023, change it above on first box</HelperText>
-          </View>
-          <View
-            style={{
-              width: "85%",
-              marginLeft: "auto",
-              marginRight: "auto",
-              marginTop: "2%",
-              marginBottom: "20%",
-            }}
-          >
-            <View
-              style={{
-                backgroundColor: COLORS.light,
-                borderRadius: 15,
-                padding: 13,
-                shadowColor: "black",
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                elevation: 5,
-                shadowOpacity: 0.5,
-                shadowRadius: 3.84,
-              }}
-            >
+          {
+            favTrips && (
+              <>
               <View
                 style={{
-                  marginVertical: 10,
-                  flexDirection: "row",
-                  // justifyContent: "space-between",
-                  alignItems: "center",
+                  width: "85%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
                 }}
               >
-                <View
+                <Text
                   style={{
-                    width: "35%",
+                    fontSize: 20,
+                    fontFamily: "overpass-reg",
+                    color: "black",
+                    marginTop: 10,
+                    marginBottom: 0,
+                    paddingBottom: 0
                   }}
                 >
-                  <Text
-                    style={{
-                      fontFamily: "montserrat-17",
-                      fontSize: 17,
-                    }}
-                    numberOfLines={1}
-                  >
-                    Dar es salaam
-                  </Text>
-                </View>
-                <Image
-                  source={require("../../../assets/images/icons/right-arrow.png")}
-                  style={{
-                    width: "30%",
-                    height: 20,
-                  }}
-                />
-                <View
-                  style={{
-                    width: "35%",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "montserrat-17",
-                      fontSize: 17,
-                      textAlign: "right",
-                    }}
-                    numberOfLines={1}
-                  >
-                    Tunduma
-                  </Text>
-                </View>
+                  Favorite Trips
+                </Text>
+                <HelperText padding="none" style={{
+                  paddingTop: 0,
+                  marginTop: 0,
+                  fontFamily: 'montserrat-17',
+                  color: COLORS.secondary
+                }}>Trip date is 11/12/2023, change it above on first box</HelperText>
               </View>
-              <CustomLine />
-              <View
-                style={{
-                  marginVertical: 10,
-                  flexDirection: "row",
-                  // justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    width: "35%",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "montserrat-17",
-                      fontSize: 17,
-                    }}
-                    numberOfLines={1}
-                  >
-                    Morogoro
-                  </Text>
-                </View>
+              {
+                favTrips.map((item, _) => (
 
-                <Image
-                  source={require("../../../assets/images/icons/right-arrow.png")}
-                  style={{
-                    width: "30%",
-                    height: 20,
-                  }}
-                />
-                <View
-                  style={{
-                    width: "35%",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "montserrat-17",
-                      fontSize: 17,
-                      textAlign: "right",
-                    }}
-                    numberOfLines={1}
-                  >
-                    Dar es salaam
-                  </Text>
-                </View>
-              </View>
-              <CustomLine />
+                
               <View
+                  key={_}
                 style={{
-                  marginVertical: 10,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
+                  width: "85%",
+                  marginLeft: "auto",
+                  marginRight: "auto",
+                  marginTop: "2%",
+                  marginBottom: "20%",
                 }}
               >
                 <View
                   style={{
-                    width: "35%",
+                    backgroundColor: COLORS.light,
+                    borderRadius: 15,
+                    padding: 13,
+                    shadowColor: "black",
+                    shadowOffset: {
+                      width: 0,
+                      height: 2,
+                    },
+                    elevation: 5,
+                    shadowOpacity: 0.5,
+                    shadowRadius: 3.84,
                   }}
                 >
-                  <Text
+                  <View
                     style={{
-                      fontFamily: "montserrat-17",
-                      fontSize: 17,
+                      marginVertical: 10,
+                      flexDirection: "row",
+                      alignItems: "center",
                     }}
-                    numberOfLines={1}
                   >
-                    Mwanza
-                  </Text>
-                </View>
-
-                <Image
-                  source={require("../../../assets/images/icons/right-arrow.png")}
-                  style={{
-                    width: "30%",
-                    height: 20,
-                  }}
-                />
-                <View
-                  style={{
-                    width: "35%",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontFamily: "montserrat-17",
-                      fontSize: 17,
-                      textAlign: "right",
-                    }}
-                    numberOfLines={1}
-                  >
-                    Dodoma
-                  </Text>
+                    <View
+                      style={{
+                        width: "35%",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "montserrat-17",
+                          fontSize: 17,
+                        }}
+                        numberOfLines={1}
+                      >
+                        {JSON.parse(item).from}
+                      </Text>
+                    </View>
+                    <Image
+                      source={require("../../../assets/images/icons/right-arrow.png")}
+                      style={{
+                        width: "30%",
+                        height: 20,
+                      }}
+                    />
+                    <View
+                      style={{
+                        width: "35%",
+                      }}
+                    >
+                      <Text
+                        style={{
+                          fontFamily: "montserrat-17",
+                          fontSize: 17,
+                          textAlign: "right",
+                        }}
+                        numberOfLines={1}
+                      >
+                        {JSON.parse(item).destination}
+                      </Text>
+                    </View>
+                  </View>
+                  {
+                    _ + 1 !== favTrips.length && (
+                      <CustomLine />
+                    )
+                  }
                 </View>
               </View>
-            </View>
-          </View>
+              ))
+            }
+          </>
+          )
+          }
         </ScrollView>
       </View>
     </>
