@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1086447131309",
+    "project_id": "busbooking-6224c",
+    "storage_bucket": "busbooking-6224c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1086447131309:android:2359871f93da1034af8424",
+        "android_client_info": {
+          "package_name": "com.mweuc654.busbooking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC6IX61RNtLYkwSIHK0-XFFjAbwKF9-S8s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
