@@ -39,6 +39,9 @@ import TicketDetails from "./screens/BottomTabs/ProfileStack/MyTickets/TicketDet
 import ValidateTicket from "./screens/BottomTabs/ProfileStack/ValidateTicket";
 import { _cacheResourcesAsync } from "./utils";
 import { NativeBaseProvider } from "native-base";
+import * as Notifications from 'expo-notifications'
+
+console.log('NOTIFICATION ', Notifications)
 
 const Stack = createNativeStackNavigator();
 const Stack1 = createStackNavigator();
