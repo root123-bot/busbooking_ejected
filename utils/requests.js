@@ -184,9 +184,11 @@ export const isUserExist = async (phone_number) => {
 export const fetchTrips = async () => {
   return fetch(`${BASE_URL}/api/alltrips/`).then((response) => {
     if (response.status === 200) {
+      console.log('WE HAVE THE STATUS OF 200')
       return response.json().then((data) => Promise.resolve(data));
     } else {
       return response.json().then((data) => {
+        console.log('WE HAVE OTHER STATUS CODE')
         return Promise.reject(data.details);
       });
     }

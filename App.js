@@ -41,7 +41,15 @@ import { _cacheResourcesAsync } from "./utils";
 import { NativeBaseProvider } from "native-base";
 import * as Notifications from 'expo-notifications'
 
-console.log('NOTIFICATION ', Notifications)
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    };
+  },
+});
 
 const Stack = createNativeStackNavigator();
 const Stack1 = createStackNavigator();
@@ -53,6 +61,21 @@ function TabIcon({ focused, color, size, name }) {
 }
 
 function MyTabs() {
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Notifications.getPermissionsAsync();
+      if (status !== "granted") {
+        const { status } = await Notifications.requestPermissionsAsync();
+        if (status !== "granted") {
+          alert("Allow this app to send you notifications");
+          return;
+        }
+      }
+    })();
+  }, [])
+
+
   return (
     <Tab.Navigator
       initialRouteName="HomeStack"

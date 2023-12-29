@@ -155,6 +155,7 @@ function AppContextProvider({ children }) {
   }
 
   function manipulateStillFetchingAvatars(status) {
+    console.log('IM GET CALLED TO CHANGE status of fetching avatars ', status)
     setStillFetchingAvatars(status);
   }
 
@@ -315,6 +316,7 @@ function AppContextProvider({ children }) {
     }
   }
 
+  // issue ipo hapa kwenye ku-get trips ndo ambapo inapita even if we have empty trips
   async function getTrips() {
     try {
       const data = await fetchTrips();

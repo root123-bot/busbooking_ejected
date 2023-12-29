@@ -165,19 +165,10 @@ function getDayName(day) {
 function HomeScreen({ navigation }) {
   const AppCtx = useContext(AppContext);
 
-  const [from, setFrom] = useState(
-    Array.from(new Set(AppCtx.trips.map((trip) => trip.bus_source))).length
-      ? Array.from(new Set(AppCtx.trips.map((trip) => trip.bus_source)))[0]
-      : "NO DATA"
-  );
+  const [from, setFrom] = useState();
   const [fromIcon, setFromIcon] = useState("chevron-down");
   const [toggleFromIcon, setToggleFromIcon] = useState("none");
-  const [destination, setDestination] = useState(
-    Array.from(new Set(AppCtx.trips.map((trip) => trip.bus_destination)))
-      .length > 0
-      ? Array.from(new Set(AppCtx.trips.map((trip) => trip.bus_destination)))[0]
-      : "NO DATA"
-  );
+  const [destination, setDestination] = useState();
   const [destinationIcon, setDestinationIcon] = useState("chevron-down");
   const [toggleDestinationIcon, setToggleDestinationIcon] = useState("none");
   const [passengers, setPassengers] = useState("1");
@@ -197,7 +188,6 @@ function HomeScreen({ navigation }) {
   const [favTrips, setFavTrips] = useState()
 
   const toggleDatePicker = () => {
-    console.log('im get called by you ')
     setShowPicker(!showPicker);
   };
 
@@ -212,7 +202,15 @@ function HomeScreen({ navigation }) {
     ).length
       ? Array.from(new Set(AppCtx.trips.map((trip) => trip.bus_source)))[0]
       : "NO DATA";
+    
+    setFrom(source)
+    
+    // lets also set the from list here 
+    const flist = Array.from(new Set(AppCtx.trips.map((trip) => trip.bus_source)))
+    setFromList(flist)
 
+    // this logic here should stand, since the destination list and default data depend on 
+    // the selected/first/default bus source...
     const result = Array.from(
       new Set(
         AppCtx.trips
@@ -220,7 +218,8 @@ function HomeScreen({ navigation }) {
           .map((data) => data.bus_destination)
       )
     );
-
+    
+    // Destination it depended on the source selected above so first we have 
     setDestinationList(result);
     setDestination(result.length > 0 ? result[0] : "Choose destination");
   };
@@ -435,8 +434,9 @@ function HomeScreen({ navigation }) {
   };
 
   useEffect(() => {
+    console.log('im impressed')
     executeCoreLogics();
-  }, []);
+  }, [AppCtx]);
 
   // useEffect(() => {
   //   const getFavTrips = async() => {
@@ -449,8 +449,8 @@ function HomeScreen({ navigation }) {
   //   }
   //   getFavTrips()
   // }, [])
-
   if (AppCtx.stillFetchingTrips || AppCtx.stillFetchingAvatars) {
+    // kama condition mojawapo ni true hii itashow skeleton nina wasiwasi na hii stillFetchingAvatars
     return (
       <Box flex={1} bg={"white"} safeArea>
         <Box mx={5} h={"100%"} justifyContent="center">

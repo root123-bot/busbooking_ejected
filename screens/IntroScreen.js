@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -11,9 +11,11 @@ import { COLORS } from "../constants/colors";
 import { Animation } from "../components/ui";
 import SwipeButton from "rn-swipe-button";
 import arrowRight from "../assets/images/icons/right-arrow.png";
+import { AppContext } from "../store/context";
 
 const { width, height } = Dimensions.get("window");
 console.log("height ", height);
+
 const CheckoutButton = () => {
   return (
     <View
@@ -32,6 +34,8 @@ const CheckoutButton = () => {
 };
 
 function IntroScreen({ navigation }) {
+  const AppCtx = useContext(AppContext);
+
   return (
     <View
       style={{

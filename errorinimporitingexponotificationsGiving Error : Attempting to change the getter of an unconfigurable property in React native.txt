@@ -1,0 +1,11 @@
+
+I HAVE THIS ERROR WHEN IMPORTIN expo-notifications as "import * as Notifications from 'expo-notifications'"
+Giving Error : Attempting to change the getter of an unconfigurable property in React native
+https://stackoverflow.com/questions/76864690/importing-expo-notifications-throws-a-weird-error
+WHAT HAPPEN AND HOW I  FIXED ABOVE ERROR. the above error can occur in any package paschal, the real reason is 
+the packages dependencies issues, there is no way to fix this until someone suggest sth to do, first he need me to
+run 'expo-doctor --check' to check expo packages conflict and im my case the expo notification required by expo is
+"0.20.1" for me i have '0.18.*' and when i do 'expo-doctor --check' i see a bunch of package whch have the dependencies 
+issues and then recommend me to run 'expo-doctor --fix' to fix all packages issues but i've notice its not okay to run
+'expo-doctor --fix' you just focus on the package which does not work for you and try to fix it .. for example in my
+case i should only install expo-notofication of version 0.20.1 just that after doing that run install pods and here you go
