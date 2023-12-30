@@ -19,6 +19,7 @@ import { CustomLine } from "../../../components/ui";
 import { AppContext } from "../../../store/context";
 import { TransparentPopUpIconMessage } from "../../../components/Messages";
 import { Skeleton, Box } from "native-base";
+import * as Notifications from "expo-notifications";
 // import AsyncStorage from "@react-native-async-storage/async-storage";
 // import { removeDuplicatedTrips } from "../../../utils";
 
@@ -433,10 +434,45 @@ function HomeScreen({ navigation }) {
     }, 500);
   };
 
+  const checkForPermission = async () => {
+    const { status } = await Notifications.getPermissionsAsync();
+    let finalStatus = status;
+
+    if (finalStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync()
+      finalStatus = status
+    }
+
+    return finalStatus
+  }
+
   useEffect(() => {
     console.log('im impressed')
     executeCoreLogics();
   }, [AppCtx]);
+
+  useEffect(() => {
+    async function configurePushNotifications() {
+      console.log('IM GET CALLED')
+      try {
+        const finalStatus = await checkForPermission();
+        console.log('final status ', finalStatus)
+        if (finalStatus !== 'granted') {
+          return;
+        }
+        console.log('IM HERE IM GETTING TOKEN')
+        const pushToken = await Notifications.getExpoPushTokenAsync({
+          projectId: "80de9f5c-e79e-42f5-8293-2ad8aac345b0"
+        });
+        console.log('EXPO PUSH TOKEN ', pushToken)
+      }
+      catch (err) {
+        console.log("Error in configurePushNotifications ", err)
+      }
+    }
+
+    configurePushNotifications();
+  }, [])
 
   // useEffect(() => {
   //   const getFavTrips = async() => {
