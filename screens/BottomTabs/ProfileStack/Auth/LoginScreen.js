@@ -95,6 +95,8 @@ function LoginScreen({ route, navigation }) {
                   pickedSeats: AppCtx.pickSeatScreenMetadata.pickedSeats,
                 },
               });
+            } else if (next === "notificationcenter") {
+              navigation.navigate("Notifications");
             }
           }, 1000);
         } else {
@@ -226,7 +228,7 @@ function LoginScreen({ route, navigation }) {
               <Text
                 style={{
                   fontFamily: "overpass-reg",
-                  textDecorationColor: COLORS.danger,
+                  textDecorationColor: COLORS.light,
                   textDecorationLine: "underline",
                   color: COLORS.light,
                 }}

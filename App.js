@@ -1,9 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
-import {
-  StyleSheet,
-  View,
-} from "react-native";
+import { StyleSheet, View } from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import {
   createStackNavigator,
@@ -39,7 +36,7 @@ import TicketDetails from "./screens/BottomTabs/ProfileStack/MyTickets/TicketDet
 import ValidateTicket from "./screens/BottomTabs/ProfileStack/ValidateTicket";
 import { _cacheResourcesAsync } from "./utils";
 import { NativeBaseProvider } from "native-base";
-import * as Notifications from 'expo-notifications'
+import * as Notifications from "expo-notifications";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => {
@@ -61,7 +58,6 @@ function TabIcon({ focused, color, size, name }) {
 }
 
 function MyTabs() {
-
   useEffect(() => {
     (async () => {
       const { status } = await Notifications.getPermissionsAsync();
@@ -73,8 +69,7 @@ function MyTabs() {
         }
       }
     })();
-  }, [])
-
+  }, []);
 
   return (
     <Tab.Navigator
@@ -132,13 +127,15 @@ function MyTabs() {
 
 function NotificationStack() {
   return (
-    <Stack.Navigator
+    <Stack1.Navigator
       screenOptions={{
         headerShown: false,
+        ...TransitionPresets.ModalPresentationIOS,
       }}
     >
-      <Stack.Screen name="Notificatons" component={Notification} />
-    </Stack.Navigator>
+      <Stack1.Screen name="Notifications" component={Notification} />
+      <Stack1.Screen name="PreviewNotifications" component={Notification} />
+    </Stack1.Navigator>
   );
 }
 

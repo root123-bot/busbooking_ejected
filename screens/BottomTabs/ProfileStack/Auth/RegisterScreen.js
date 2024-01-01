@@ -1,5 +1,12 @@
 import React, { memo, useContext, useRef, useState } from "react";
-import { View, Text, StyleSheet, Keyboard } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Keyboard,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 import { Background } from "../../../../components/ui";
 import PhoneInput from "react-native-phone-number-input";
 import { TextInput, Button, HelperText } from "react-native-paper";
@@ -135,6 +142,25 @@ function RegisterScreen({ route, navigation }) {
               By continuing you confirm that you are authorized to use this
               phone number & agree to receive an SMS text.
             </HelperText>
+            {/* <TouchableOpacity
+              onPress={() => navigation.navigate("Login")}
+              style={{
+                alignSelf: "flex-end",
+                marginVertical: 15,
+                marginHorizontal: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: "overpass-reg",
+                  textDecorationColor: COLORS.light,
+                  textDecorationLine: "underline",
+                  color: COLORS.light,
+                }}
+              >
+                Login here
+              </Text>
+            </TouchableOpacity> */}
             <Button
               buttonColor={COLORS.primary}
               textColor={COLORS.thirdary}

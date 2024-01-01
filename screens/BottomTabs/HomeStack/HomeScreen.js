@@ -453,14 +453,12 @@ function HomeScreen({ navigation }) {
 
   useEffect(() => {
     async function configurePushNotifications() {
-      console.log('IM GET CALLED')
       try {
         const finalStatus = await checkForPermission();
         console.log('final status ', finalStatus)
         if (finalStatus !== 'granted') {
           return;
         }
-        console.log('IM HERE IM GETTING TOKEN')
         const pushToken = await Notifications.getExpoPushTokenAsync({
           projectId: "80de9f5c-e79e-42f5-8293-2ad8aac345b0"
         });
