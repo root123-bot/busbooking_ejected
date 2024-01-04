@@ -87,8 +87,10 @@ export default function Card({ isNew }) {
             >
               <RNPaper.Text
                 style={{
-                  fontFamily: "overpass-reg",
+                  //   fontFamily: "overpass-reg",
                   marginRight: 5,
+                  fontSize: 13,
+                  color,
                 }}
               >
                 2 months
