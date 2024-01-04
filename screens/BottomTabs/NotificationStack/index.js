@@ -1,10 +1,6 @@
-import {
-  FontAwesome5,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
-import React, { memo, useEffect, useState, useContext } from "react";
+import React, { memo, useContext } from "react";
 import {
   Text,
   StyleSheet,
@@ -19,6 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as RNPaper from "react-native-paper";
 import { AppContext } from "../../../store/context";
 import { HStack, Menu, Pressable } from "native-base";
+import PreviewNotification from "./preview-notification/PreviewNotification";
 
 function Notification({ navigation }) {
   const AppCtx = useContext(AppContext);
@@ -133,8 +130,11 @@ function Notification({ navigation }) {
               }}
               mode="contained"
               onPress={() =>
-                navigation.navigate("Login", {
-                  next: "notificationcenter",
+                navigation.navigate("ProfileStack", {
+                  screen: "Login",
+                  params: {
+                    next: "notificationcenter",
+                  },
                 })
               }
             >
@@ -142,7 +142,16 @@ function Notification({ navigation }) {
             </Button>
           </View>
         ) : (
-          <></>
+          <View
+            style={{
+              paddingVertical: 10,
+            }}
+          >
+            <PreviewNotification isNew />
+            <PreviewNotification />
+            <PreviewNotification />
+            <PreviewNotification isNew />
+          </View>
         )}
       </View>
     </>
