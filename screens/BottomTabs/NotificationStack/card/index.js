@@ -9,13 +9,18 @@ import {
   MaterialCommunityIcons,
   MaterialIcons,
 } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+
 export default function Card({ isNew }) {
+  const navigation = useNavigation();
+
   const color = isNew ? "black" : "grey";
   return (
     <Pressable
       style={{
         paddingHorizontal: 10,
       }}
+      onPress={() => navigation.navigate("ViewNotification")}
     >
       <View
         style={{

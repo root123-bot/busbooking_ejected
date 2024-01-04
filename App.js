@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, TouchableOpacity, View, Text } from "react-native";
 import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import {
   createStackNavigator,
@@ -37,6 +37,7 @@ import ValidateTicket from "./screens/BottomTabs/ProfileStack/ValidateTicket";
 import { _cacheResourcesAsync } from "./utils";
 import { NativeBaseProvider } from "native-base";
 import * as Notifications from "expo-notifications";
+import ViewNotification from "./screens/BottomTabs/NotificationStack/view-notification";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => {
@@ -125,7 +126,7 @@ function MyTabs() {
   );
 }
 
-function NotificationStack() {
+function NotificationStack({ navigation }) {
   return (
     <Stack1.Navigator
       screenOptions={{
@@ -134,7 +135,38 @@ function NotificationStack() {
       }}
     >
       <Stack1.Screen name="Notifications" component={Notification} />
-      <Stack1.Screen name="PreviewNotifications" component={Notification} />
+      <Stack1.Screen
+        name="ViewNotification"
+        options={{
+          headerShown: true,
+          headerTitle: "Notification",
+          headerTintColor: "#fff",
+          headerTitleStyle: {
+            fontFamily: "montserrat-17",
+            textTransform: "capitalize",
+          },
+          headerTitleAlign: "center",
+          headerLeft: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Notifications")}
+            >
+              <Text
+                style={{
+                  color: "#fff",
+                  marginLeft: 10,
+                  fontFamily: "montserrat-17",
+                }}
+              >
+                Cancel
+              </Text>
+            </TouchableOpacity>
+          ),
+          headerStyle: {
+            backgroundColor: COLORS.darkprimary,
+          },
+        }}
+        component={ViewNotification}
+      />
     </Stack1.Navigator>
   );
 }
