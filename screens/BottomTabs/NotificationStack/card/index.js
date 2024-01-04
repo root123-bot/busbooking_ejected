@@ -25,7 +25,7 @@ export default function Card({ isNew }) {
       <View
         style={{
           position: "relative",
-          flexDirection: "row",
+          //   flexDirection: "row",
           width: "100%",
           paddingVertical: 13,
         }}
@@ -47,22 +47,62 @@ export default function Card({ isNew }) {
             </Text>
           </View>
         )}
-
         <View
           style={{
-            width: "85%",
+            width: "100%",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <View
+            style={{
+              width: "60%",
+            }}
+          >
+            <RNPaper.Text
+              style={{
+                fontSize: 17,
+                color,
+                fontFamily: "montserrat-17",
+              }}
+              numberOfLines={1}
+            >
+              Booked successful
+            </RNPaper.Text>
+          </View>
+          <View
+            style={
+              {
+                //   alignItems: "flex-end",
+              }
+            }
+          >
+            <View
+              style={{
+                marginRight: 10,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <RNPaper.Text
+                style={{
+                  fontFamily: "overpass-reg",
+                  marginRight: 5,
+                }}
+              >
+                2 months
+              </RNPaper.Text>
+              <MaterialCommunityIcons size={20} name="chevron-right" color />
+            </View>
+          </View>
+        </View>
+        <View
+          style={{
+            width: "90%",
             //   backgroundColor: "red",
           }}
         >
-          <RNPaper.Text
-            style={{
-              fontSize: 17,
-              color,
-              fontFamily: "montserrat-17",
-            }}
-          >
-            Booked successful
-          </RNPaper.Text>
           <RNPaper.HelperText
             padding="none"
             style={{
@@ -74,20 +114,6 @@ export default function Card({ isNew }) {
           >
             Your payment for booking of ticket has been made successful
           </RNPaper.HelperText>
-        </View>
-        <View
-          style={{
-            width: "15%",
-            alignItems: "flex-end",
-          }}
-        >
-          <View
-            style={{
-              marginRight: 10,
-            }}
-          >
-            <MaterialCommunityIcons size={20} name="chevron-right" color />
-          </View>
         </View>
       </View>
       <CustomLine
