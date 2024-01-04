@@ -15,7 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as RNPaper from "react-native-paper";
 import { AppContext } from "../../../store/context";
 import { HStack, Menu, Pressable } from "native-base";
-import PreviewNotification from "./preview-notification/PreviewNotification";
+import Card from "./card";
 
 function Notification({ navigation }) {
   const AppCtx = useContext(AppContext);
@@ -147,10 +147,10 @@ function Notification({ navigation }) {
               paddingVertical: 10,
             }}
           >
-            <PreviewNotification isNew />
-            <PreviewNotification />
-            <PreviewNotification />
-            <PreviewNotification isNew />
+            <Card isNew />
+            <Card />
+            <Card />
+            <Card isNew />
           </View>
         )}
       </View>
