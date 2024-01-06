@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useContext, useEffect, useState } from "react";
 import { BASE_URL } from "../constants/domain";
 import { _cacheImages } from "../utils";
-import { fetchAvatars, fetchTrips } from "../utils/requests";
+import { fetchAvatars, fetchTrips, userNotifications } from "../utils/requests";
 import { removeDuplicatedTrips } from "../utils";
 
 export const AppContext = createContext({
@@ -24,6 +24,7 @@ export const AppContext = createContext({
   pickSeatScreenMetadata: {},
   afterLoginNext: null,
   favTrips: [],
+  usernotification: [],
   manipulateIsAunthenticated: (value) => {},
   manipulateUserMetadata: (metadata) => {},
   manipulateFavIcon: (icon) => {},
@@ -43,7 +44,10 @@ export const AppContext = createContext({
   manipulatePickSeatScreenMetadata: (metadata) => {},
   manipulateAfterLoginNext: (next) => {},
   manipulateFavTrips: (mt) => {},
-  updateFavTrips: (mt) => {}
+  updateFavTrips: (mt) => {},
+  updateusernotifications: (notifications) => {},
+  manipulateusernotification: (notification) => {},
+  markNotificationAsRead: (notification_id) => {},
 });
 
 function AppContextProvider({ children }) {
@@ -60,7 +64,8 @@ function AppContextProvider({ children }) {
   const [finishedCachingAvatars, setFinishedCachingAvatars] = useState(false);
   const [stillExecutingUserMetadata, setStillExecutingUserMetadata] =
     useState(true);
-  const [favTrips, setFavTrips] = useState([])
+  const [usernotifications, setUserNotifications] = useState([]);
+  const [favTrips, setFavTrips] = useState([]);
   const [trips, setTrips] = useState([]);
   const [afterLoginNext, setAfterLoginNext] = useState(null);
   const [userTripMetadata, setUserTripMetadata] = useState(null);
@@ -82,6 +87,44 @@ function AppContextProvider({ children }) {
     setAfterLoginNext(next);
   }
 
+  function manipulateusernotification(notification) {
+    setUserNotifications((prevState) => {
+      const notifications = [...prevState];
+      const target = notifications
+        .filter((notification) => notification.is_read === false)
+        .find((noti) => +noti.id === +notification.id);
+      if (target) {
+        const targetIndex = notifications.findIndex(
+          (noti) => +noti.id === +notification.id
+        );
+        notifications.splice(targetIndex, 1);
+        // i post my new notifcation to array
+        notifications.push(notification);
+      } else {
+        notifications.push(notification);
+      }
+
+      return notifications;
+    });
+  }
+
+  function markNotificationAsRead(notification_id) {
+    setUserNotifications((prevState) => {
+      const notifications = [...prevState];
+      const target = notifications.find(
+        (notification) => +notification.id === +notification_id
+      );
+      if (target) {
+        target.is_read = true;
+      }
+      return notifications;
+    });
+  }
+
+  function updateusernotifications(notifications) {
+    setUserNotifications(notifications);
+  }
+
   function updateTrips(trips) {
     setTrips(trips);
   }
@@ -91,45 +134,45 @@ function AppContextProvider({ children }) {
   }
 
   function updateFavTrips(mt) {
-    setFavTrips(mt)
+    setFavTrips(mt);
   }
 
   async function manipulateFavTrips(mt) {
-    const { metadata, status} = mt
-    if (status === 'add') {
-
-      let isTripExist = false
+    const { metadata, status } = mt;
+    if (status === "add") {
+      let isTripExist = false;
       for (let item of favTrips) {
         if (
-          item.destination.toLowerCase() === metadata.destination.toLowerCase() && 
+          item.destination.toLowerCase() ===
+            metadata.destination.toLowerCase() &&
           item.from.toLowerCase() === metadata.from.toLowerCase()
         ) {
-          isTripExist = true
+          isTripExist = true;
           break;
         }
       }
       if (!isTripExist) {
         // we need to add that to favTrips
-        setFavTrips(prevState => ([
-          { from: metadata.from, destination: metadata.destination},
-          ...prevState
-        ]))
+        setFavTrips((prevState) => [
+          { from: metadata.from, destination: metadata.destination },
+          ...prevState,
+        ]);
       }
     }
-    if (status === 'remove') {
+    if (status === "remove") {
       // the logic behind here is to check the number of occurance in context if we have the
-      // more than one data having the same destination and from then no need to delete the 
+      // more than one data having the same destination and from then no need to delete the
       // favorite because there is many saved favorite but if there is only one then we can
       // delete it, we can adjust the number in context by user do and undo favorite on route
-      let data =  await AsyncStorage.getItem('favorite-trips')
-      data = JSON.parse(data)
-      data = data.map(val => JSON.parse(val))
+      let data = await AsyncStorage.getItem("favorite-trips");
+      data = JSON.parse(data);
+      data = data.map((val) => JSON.parse(val));
 
-      const filtered = data.filter((val, _) => 
-        val.from.toLowerCase() === metadata.from.toLowerCase() && 
-        val.destination.toLowerCase() === metadata.destination.toLowerCase()
-      )
-
+      const filtered = data.filter(
+        (val, _) =>
+          val.from.toLowerCase() === metadata.from.toLowerCase() &&
+          val.destination.toLowerCase() === metadata.destination.toLowerCase()
+      );
 
       // if filtered is greater than one then we know there is more than one trip has been added as favorite
       // so no need to remove it..
@@ -137,13 +180,24 @@ function AppContextProvider({ children }) {
         return;
       }
 
-      const existing = favTrips.find(item => item.from === metadata.from && item.destination === metadata.destination)
+      const existing = favTrips.find(
+        (item) =>
+          item.from === metadata.from &&
+          item.destination === metadata.destination
+      );
 
-      if(existing) {
+      if (existing) {
         // then we should remove it
-        const ft = [...favTrips]
-        ft.splice(ft.findIndex(item => item.from === metadata.from && item.destination === metadata.destination), 1)
-        setFavTrips(ft)
+        const ft = [...favTrips];
+        ft.splice(
+          ft.findIndex(
+            (item) =>
+              item.from === metadata.from &&
+              item.destination === metadata.destination
+          ),
+          1
+        );
+        setFavTrips(ft);
       }
     }
   }
@@ -155,7 +209,6 @@ function AppContextProvider({ children }) {
   }
 
   function manipulateStillFetchingAvatars(status) {
-    console.log('IM GET CALLED TO CHANGE status of fetching avatars ', status)
     setStillFetchingAvatars(status);
   }
 
@@ -211,6 +264,7 @@ function AppContextProvider({ children }) {
     setResetPhoneNumber({});
     setUserTripMetadata(null);
     setAfterLoginNext(null);
+    setUserNotifications([]);
     AsyncStorage.removeItem("user_id");
   }
 
@@ -226,10 +280,19 @@ function AppContextProvider({ children }) {
   async function executeUserMetadata() {
     let user_id = await AsyncStorage.getItem("user_id");
     let phone_number = await AsyncStorage.getItem("phone_number");
-    console.log("LOGIN CREDENTIALS HERE ", phone_number, user_id);
     setLastLoginPhoneNumber(phone_number);
-
+    console.log("USER ID ", user_id);
     if (user_id) {
+      try {
+        const notifications = await userNotifications(user_id);
+        console.log("Notifications for you ", notifications);
+        setUserNotifications(notifications);
+      } catch (error) {
+        // this means "pass" in python if there is an error no need to bother
+        // as the notification is not the main concept here, so it will pass
+        // and continue fetching the userdetails
+      }
+
       setIsAunthenticated(true);
       fetch(`${BASE_URL}/api/userdetails/`, {
         method: "POST",
@@ -352,16 +415,16 @@ function AppContextProvider({ children }) {
   }, []);
 
   useEffect(() => {
-    const getFavTrips = async() => {
-      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+    const getFavTrips = async () => {
+      let favtrips = await AsyncStorage.getItem("favorite-trips");
       if (favtrips) {
-        const result = removeDuplicatedTrips(JSON.parse(favtrips))
-        console.log('this is results for you ', result.reverse())
-        setFavTrips(result)
+        const result = removeDuplicatedTrips(JSON.parse(favtrips));
+        console.log("this is results for you ", result.reverse());
+        setFavTrips(result);
       }
-    }
-    getFavTrips()
-  }, [])
+    };
+    getFavTrips();
+  }, []);
 
   const value = {
     isAunthenticated,
@@ -382,6 +445,7 @@ function AppContextProvider({ children }) {
     pickSeatScreenMetadata,
     afterLoginNext,
     favTrips,
+    usernotifications,
     manipulateIsAunthenticated,
     manipulateUserMetadata,
     manipulateFavIcon,
@@ -401,7 +465,10 @@ function AppContextProvider({ children }) {
     manipulatePickSeatScreenMetadata,
     manipulateAfterLoginNext,
     updateFavTrips,
-    manipulateFavTrips
+    manipulateFavTrips,
+    manipulateusernotification,
+    updateusernotifications,
+    markNotificationAsRead,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

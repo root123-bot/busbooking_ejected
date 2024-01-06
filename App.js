@@ -59,6 +59,8 @@ function TabIcon({ focused, color, size, name }) {
 }
 
 function MyTabs() {
+  const AppCtx = useContext(AppContext);
+
   useEffect(() => {
     (async () => {
       const { status } = await Notifications.getPermissionsAsync();
@@ -95,6 +97,10 @@ function MyTabs() {
       <Tab.Screen
         options={{
           title: "NotificationStack",
+          tabBarBadge:
+            AppCtx.usernotifications.filter((noti) => !noti.is_read).length < 1
+              ? null
+              : AppCtx.usernotifications.filter((noti) => !noti.is_read).length,
           tabBarIcon: ({ focused, size, color }) => (
             <TabIcon
               size={size}
