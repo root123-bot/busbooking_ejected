@@ -176,8 +176,7 @@ function FillPassengerInfo({ route, navigation }) {
   const [iNeedToPayNow, setINeedToPayNow] = useState(false);
   const [shouldRemoveFirstBlinkingView, setShouldRemoveFirstBlinkingView] =
     useState(false);
-  const [favIcon, setFavIcon] = useState('hearto')
-
+  const [favIcon, setFavIcon] = useState("hearto");
 
   const paymentHandler = () => {
     const nameValid = name.value.trim().length > 0;
@@ -223,72 +222,78 @@ function FillPassengerInfo({ route, navigation }) {
     const trip = JSON.stringify({
       from: tr.from,
       destination: tr.destination,
-      trip_id: metadata.id
-    })
-    if (favIcon === 'hearto') {
+      trip_id: metadata.id,
+    });
+    if (favIcon === "hearto") {
       AppCtx.manipulateFavTrips({
         metadata: JSON.parse(trip),
-        status: 'add'
-      })
-      setFavIcon('heart')
-      let favtrips =  await AsyncStorage.getItem('favorite-trips')
-      console.log('FAV ', favtrips)
+        status: "add",
+      });
+      setFavIcon("heart");
+      let favtrips = await AsyncStorage.getItem("favorite-trips");
+      console.log("FAV ", favtrips);
       if (favtrips) {
-        favtrips = JSON.parse(favtrips)
-        console.log("fav2 ", favtrips)
-        const existingtrip = favtrips.find(val => val === trip)
+        favtrips = JSON.parse(favtrips);
+        console.log("fav2 ", favtrips);
+        const existingtrip = favtrips.find((val) => val === trip);
         if (!existingtrip) {
-          favtrips = [...favtrips, trip]
-          await AsyncStorage.setItem('favorite-trips', JSON.stringify(favtrips))
+          favtrips = [...favtrips, trip];
+          await AsyncStorage.setItem(
+            "favorite-trips",
+            JSON.stringify(favtrips)
+          );
         }
+      } else {
+        await AsyncStorage.setItem("favorite-trips", JSON.stringify([trip]));
       }
-      else {
-        await AsyncStorage.setItem('favorite-trips', JSON.stringify([trip]))
-      }
-    }
-    else {
-      setFavIcon('hearto')
-      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+    } else {
+      setFavIcon("hearto");
+      let favtrips = await AsyncStorage.getItem("favorite-trips");
       AppCtx.manipulateFavTrips({
         metadata: JSON.parse(trip),
-        status: 'remove'
-      })
+        status: "remove",
+      });
       if (favtrips) {
-        favtrips = JSON.parse(favtrips)
-        const existingtrip = favtrips.find(val => val === trip)
+        favtrips = JSON.parse(favtrips);
+        const existingtrip = favtrips.find((val) => val === trip);
 
         if (existingtrip) {
-          favtrips.splice(favtrips.findIndex(val => val === trip) , 1)
-          await AsyncStorage.setItem('favorite-trips', JSON.stringify(favtrips))
+          favtrips.splice(
+            favtrips.findIndex((val) => val === trip),
+            1
+          );
+          await AsyncStorage.setItem(
+            "favorite-trips",
+            JSON.stringify(favtrips)
+          );
         }
       }
     }
-  }
+  };
 
   useEffect(() => {
     async function checkIfFavorite() {
-      let favtrips =  await AsyncStorage.getItem('favorite-trips')
+      let favtrips = await AsyncStorage.getItem("favorite-trips");
       const trip = JSON.stringify({
         from: AppCtx.userTripMetadata.from,
         destination: AppCtx.userTripMetadata.destination,
-        trip_id: metadata.id
-      })
+        trip_id: metadata.id,
+      });
       if (favtrips) {
-        favtrips = JSON.parse(favtrips)
-        const existingtrip = favtrips.find(val => val === trip)
+        favtrips = JSON.parse(favtrips);
+        const existingtrip = favtrips.find((val) => val === trip);
         if (existingtrip) {
-          setFavIcon('heart')
-        }
-        else {
-          setFavIcon('hearto')
+          setFavIcon("heart");
+        } else {
+          setFavIcon("hearto");
         }
       } else {
-        setFavIcon('hearto')
+        setFavIcon("hearto");
       }
     }
-    
-    checkIfFavorite()
-  }, [])
+
+    checkIfFavorite();
+  }, []);
 
   useEffect(() => {
     // kama huyu ni true basi mlazimishe awe false
@@ -551,8 +556,13 @@ function FillPassengerInfo({ route, navigation }) {
                         alignItems: "flex-end",
                       }}
                     >
-                      <TouchableOpacity onPress={handleFavorite.bind(this, AppCtx.userTripMetadata)}>
-                        <AntDesign name={favIcon} size={25} color={'white'} />
+                      <TouchableOpacity
+                        onPress={handleFavorite.bind(
+                          this,
+                          AppCtx.userTripMetadata
+                        )}
+                      >
+                        <AntDesign name={favIcon} size={25} color={"white"} />
                       </TouchableOpacity>
                     </View>
                   </View>

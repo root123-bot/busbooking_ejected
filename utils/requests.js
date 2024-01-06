@@ -184,11 +184,11 @@ export const isUserExist = async (phone_number) => {
 export const fetchTrips = async () => {
   return fetch(`${BASE_URL}/api/alltrips/`).then((response) => {
     if (response.status === 200) {
-      console.log('WE HAVE THE STATUS OF 200')
+      console.log("WE HAVE THE STATUS OF 200");
       return response.json().then((data) => Promise.resolve(data));
     } else {
       return response.json().then((data) => {
-        console.log('WE HAVE OTHER STATUS CODE')
+        console.log("WE HAVE OTHER STATUS CODE");
         return Promise.reject(data.details);
       });
     }
@@ -282,20 +282,80 @@ export const DeleteBooking = async (formData) => {
 
 export const CustomerPaidBookings = async (user_id) => {
   return fetch(`${BASE_URL}/api/customerbookings/`, {
-    method: 'POST',
+    method: "POST",
     body: JSON.stringify({
-      user_id
+      user_id,
     }),
     headers: {
       "Content-Type": "application/json",
     },
   }).then((response) => {
-    if(response.ok) {
-      return response.json().then((data) => Promise.resolve(data))
+    if (response.ok) {
+      return response.json().then((data) => Promise.resolve(data));
     } else {
       return response.json().then((data) => {
-        return Promise.reject(data.details)
-      })
+        return Promise.reject(data.details);
+      });
     }
-  })
-}
+  });
+};
+
+export const userNotifications = async (user_id) => {
+  return fetch(`${BASE_URL}/api/fetchnotificationofuser/`, {
+    method: "POST",
+    body: JSON.stringify({
+      user_id,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (response.ok) {
+      return response.json().then((data) => Promise.resolve(data));
+    } else {
+      return response.json().then((data) => {
+        return Promise.reject(data.details);
+      });
+    }
+  });
+};
+
+export const markNotificationDeleted = async (notification_id) => {
+  return fetch(`${BASE_URL}/api/marknotificationdeleted/`, {
+    method: "POST",
+    body: JSON.stringify({
+      notification_id,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (response.ok) {
+      return response.json().then((data) => Promise.resolve(data));
+    } else {
+      return response.json().then((data) => {
+        return Promise.reject(data.details);
+      });
+    }
+  });
+};
+
+export const clearAllUserNotifications = async (user_id) => {
+  return fetch(`${BASE_URL}/api/clearallnotificationofuser/`, {
+    method: "POST",
+    body: JSON.stringify({
+      user_id,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (response.ok) {
+      return response.json().then((data) => Promise.resolve(data));
+    } else {
+      return response.json().then((data) => {
+        return Promise.reject(data.details);
+      });
+    }
+  });
+};
