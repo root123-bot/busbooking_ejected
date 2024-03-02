@@ -192,6 +192,9 @@ function LoginScreen({ route, navigation }) {
               withDarkTheme={false}
               withShadow
               autoFocus={false}
+              countryPickerProps={{
+                countryCodes: ["TZ"],
+              }}
             />
           </View>
           <View style={styles.formInput}>
