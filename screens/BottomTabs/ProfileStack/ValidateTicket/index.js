@@ -1,5 +1,12 @@
 import React, { memo, useState, useEffect } from "react";
-import { View, Text, Dimensions, StyleSheet, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Dimensions,
+  StyleSheet,
+  Alert,
+  Platform,
+} from "react-native";
 import { Button, HelperText } from "react-native-paper";
 import { COLORS } from "../../../../constants/colors";
 import { Background, Animation, CustomLine } from "../../../../components/ui";
@@ -52,7 +59,10 @@ function ValidateTicket() {
               // backgroundColor: "red",
               alignSelf: "center",
               position: "absolute",
-              top: "25%%",
+              top:
+                Platform.OS === "ios"
+                  ? "25%%"
+                  : Dimensions.get("screen").height * 0.2,
               zIndex: 10000,
             }}
           >
