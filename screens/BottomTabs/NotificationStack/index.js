@@ -1,15 +1,8 @@
 import { FontAwesome5 } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
-import React, { memo, useContext } from "react";
-import {
-  Text,
-  StyleSheet,
-  View,
-  FlatList,
-  Image,
-  TouchableOpacity,
-} from "react-native";
-import { Button, HelperText } from "react-native-paper";
+import React, { memo, useContext, useState } from "react";
+import { Text, StyleSheet, View, FlatList } from "react-native";
+import { Button } from "react-native-paper";
 import { COLORS } from "../../../constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import * as RNPaper from "react-native-paper";
@@ -142,17 +135,22 @@ function Notification({ navigation }) {
             </Button>
           </View>
         ) : (
-          <View
-            style={{
-              // paddingVertical: 10,
-            }}
-          >
-            <FlatList
-              data={[1, 2, 3, 4, 5]}
-              renderItem={({ item, index }) => (
-                <Card marginBottom={index + 1 === 5 ? 200 : 0} />
-              )}
-            />
+          <View>
+            {AppCtx.usernotifications.length > 0 ? (
+              <FlatList
+                data={AppCtx.usernotifications}
+                renderItem={({ item, index }) => (
+                  <Card
+                    notification={item}
+                    marginBottom={index + 1 === 5 ? 200 : 0}
+                  />
+                )}
+              />
+            ) : (
+              <View>
+                <Text>no notifications</Text>
+              </View>
+            )}
           </View>
         )}
       </View>

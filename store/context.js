@@ -24,7 +24,7 @@ export const AppContext = createContext({
   pickSeatScreenMetadata: {},
   afterLoginNext: null,
   favTrips: [],
-  usernotification: [],
+  usernotifications: [],
   manipulateIsAunthenticated: (value) => {},
   manipulateUserMetadata: (metadata) => {},
   manipulateFavIcon: (icon) => {},

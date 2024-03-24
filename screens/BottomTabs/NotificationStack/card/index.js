@@ -6,8 +6,9 @@ import { CustomLine } from "../../../../components/ui";
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Swipeable } from "react-native-gesture-handler";
+import moment from "moment";
 
-export default function Card({ isNew, marginBottom }) {
+export default function Card({ isNew, marginBottom, notification }) {
   const navigation = useNavigation();
   const swippeableRef = useRef();
 
@@ -17,8 +18,7 @@ export default function Card({ isNew, marginBottom }) {
       outputRange: [1, 0, 0, 100],
     });
 
-    const handleDeleteItem = () => {
-    };
+    const handleDeleteItem = () => {};
 
     return (
       <Animated.View
@@ -49,7 +49,7 @@ export default function Card({ isNew, marginBottom }) {
 
   const handleOnSwipeRightClose = () => {};
 
-  const color = isNew ? "black" : "grey";
+  const color = !notification.is_read ? "black" : "grey";
   return (
     <Swipeable
       renderRightActions={renderRightActions}
@@ -63,7 +63,7 @@ export default function Card({ isNew, marginBottom }) {
         style={{
           marginBottom,
           height: 90,
-          justifyContent: 'space-between'
+          justifyContent: "space-between",
         }}
       >
         <View
@@ -74,7 +74,7 @@ export default function Card({ isNew, marginBottom }) {
             paddingHorizontal: 12,
           }}
         >
-          {isNew && (
+          {!notification.is_read && (
             <View
               style={{
                 position: "absolute",
@@ -108,20 +108,14 @@ export default function Card({ isNew, marginBottom }) {
                 style={{
                   fontSize: 17,
                   color,
-                  fontFamily: "montserrat-17",
+                  fontFamily: "overpass-reg",
                 }}
                 numberOfLines={1}
               >
-                Booked successful
+                {notification.heading}
               </RNPaper.Text>
             </View>
-            <View
-              style={
-                {
-                  //   alignItems: "flex-end",
-                }
-              }
-            >
+            <View>
               <View
                 style={{
                   marginRight: 10,
@@ -131,13 +125,16 @@ export default function Card({ isNew, marginBottom }) {
               >
                 <RNPaper.Text
                   style={{
-                    //   fontFamily: "overpass-reg",
                     marginRight: 5,
                     fontSize: 13,
                     color,
                   }}
                 >
-                  2 months
+                  {`${moment
+                    .utc(notification.created_at)
+                    .local()
+                    .startOf("seconds")
+                    .fromNow()}`}
                 </RNPaper.Text>
                 <MaterialCommunityIcons size={20} name="chevron-right" color />
               </View>
@@ -146,7 +143,6 @@ export default function Card({ isNew, marginBottom }) {
           <View
             style={{
               width: "90%",
-              //   backgroundColor: "red",
             }}
           >
             <RNPaper.HelperText
@@ -158,7 +154,7 @@ export default function Card({ isNew, marginBottom }) {
               }}
               numberOfLines={2}
             >
-              Your payment for booking of ticket has been made successful
+              {notification.body}
             </RNPaper.HelperText>
           </View>
         </View>
