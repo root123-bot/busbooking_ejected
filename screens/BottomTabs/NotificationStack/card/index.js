@@ -3,7 +3,7 @@ import { View, Animated, Text, Pressable } from "react-native";
 import { COLORS } from "../../../../constants/colors";
 import * as RNPaper from "react-native-paper";
 import { CustomLine } from "../../../../components/ui";
-import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { Swipeable } from "react-native-gesture-handler";
 
@@ -69,7 +69,6 @@ export default function Card({ isNew, marginBottom }) {
         <View
           style={{
             position: "relative",
-            //   flexDirection: "row",
             width: "100%",
             paddingVertical: 13,
             paddingHorizontal: 12,
