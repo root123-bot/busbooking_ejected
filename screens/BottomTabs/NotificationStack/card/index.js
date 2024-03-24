@@ -1,128 +1,174 @@
-import React from "react";
-import { View, StyleSheet, Text, Pressable } from "react-native";
+import React, { useRef } from "react";
+import { View, Animated, Text, Pressable } from "react-native";
 import { COLORS } from "../../../../constants/colors";
 import * as RNPaper from "react-native-paper";
 import { CustomLine } from "../../../../components/ui";
-import {
-  AntDesign,
-  Ionicons,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { Swipeable } from "react-native-gesture-handler";
 
-export default function Card({ isNew }) {
+export default function Card({ isNew, marginBottom }) {
   const navigation = useNavigation();
+  const swippeableRef = useRef();
+
+  const renderRightActions = (progress, dragX) => {
+    const trans = dragX.interpolate({
+      inputRange: [-101, -100, -50, 0],
+      outputRange: [1, 0, 0, 100],
+    });
+
+    const handleDeleteItem = () => {
+    };
+
+    return (
+      <Animated.View
+        style={[
+          {
+            transform: [{ translateX: trans }],
+          },
+        ]}
+      >
+        <Pressable onPress={handleDeleteItem}>
+          <View
+            style={{
+              backgroundColor: COLORS.danger,
+              height: 90,
+              width: 90,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <MaterialIcons name="delete-outline" size={30} color={"#fff"} />
+          </View>
+        </Pressable>
+      </Animated.View>
+    );
+  };
+
+  const handleOnSwipeRightOpen = () => {};
+
+  const handleOnSwipeRightClose = () => {};
 
   const color = isNew ? "black" : "grey";
   return (
-    <Pressable
-      style={{
-        paddingHorizontal: 10,
-      }}
-      onPress={() => navigation.navigate("ViewNotification")}
+    <Swipeable
+      renderRightActions={renderRightActions}
+      onSwipeableWillOpen={handleOnSwipeRightOpen}
+      onSwipeableClose={handleOnSwipeRightClose}
+      overshootRight={false}
+      ref={swippeableRef}
     >
-      <View
+      <Pressable
+        onPress={() => navigation.navigate("ViewNotification")}
         style={{
-          position: "relative",
-          //   flexDirection: "row",
-          width: "100%",
-          paddingVertical: 13,
+          marginBottom,
+          height: 90,
+          justifyContent: 'space-between'
         }}
       >
-        {isNew && (
-          <View
-            style={{
-              position: "absolute",
-              bottom: 15,
-              right: 15,
-            }}
-          >
-            <Text
-              style={{
-                color: COLORS.danger,
-              }}
-            >
-              ●
-            </Text>
-          </View>
-        )}
         <View
           style={{
+            position: "relative",
+            //   flexDirection: "row",
             width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
+            paddingVertical: 13,
+            paddingHorizontal: 12,
           }}
         >
+          {isNew && (
+            <View
+              style={{
+                position: "absolute",
+                bottom: 15,
+                right: 25,
+              }}
+            >
+              <Text
+                style={{
+                  color: COLORS.danger,
+                }}
+              >
+                ●
+              </Text>
+            </View>
+          )}
           <View
             style={{
-              width: "60%",
+              width: "100%",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
             }}
-          >
-            <RNPaper.Text
-              style={{
-                fontSize: 17,
-                color,
-                fontFamily: "montserrat-17",
-              }}
-              numberOfLines={1}
-            >
-              Booked successful
-            </RNPaper.Text>
-          </View>
-          <View
-            style={
-              {
-                //   alignItems: "flex-end",
-              }
-            }
           >
             <View
               style={{
-                marginRight: 10,
-                flexDirection: "row",
-                alignItems: "center",
+                width: "60%",
               }}
             >
               <RNPaper.Text
                 style={{
-                  //   fontFamily: "overpass-reg",
-                  marginRight: 5,
-                  fontSize: 13,
+                  fontSize: 17,
                   color,
+                  fontFamily: "montserrat-17",
+                }}
+                numberOfLines={1}
+              >
+                Booked successful
+              </RNPaper.Text>
+            </View>
+            <View
+              style={
+                {
+                  //   alignItems: "flex-end",
+                }
+              }
+            >
+              <View
+                style={{
+                  marginRight: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
                 }}
               >
-                2 months
-              </RNPaper.Text>
-              <MaterialCommunityIcons size={20} name="chevron-right" color />
+                <RNPaper.Text
+                  style={{
+                    //   fontFamily: "overpass-reg",
+                    marginRight: 5,
+                    fontSize: 13,
+                    color,
+                  }}
+                >
+                  2 months
+                </RNPaper.Text>
+                <MaterialCommunityIcons size={20} name="chevron-right" color />
+              </View>
             </View>
           </View>
-        </View>
-        <View
-          style={{
-            width: "90%",
-            //   backgroundColor: "red",
-          }}
-        >
-          <RNPaper.HelperText
-            padding="none"
+          <View
             style={{
-              fontSize: 14,
-              lineHeight: 15,
-              color,
+              width: "90%",
+              //   backgroundColor: "red",
             }}
-            numberOfLines={2}
           >
-            Your payment for booking of ticket has been made successful
-          </RNPaper.HelperText>
+            <RNPaper.HelperText
+              padding="none"
+              style={{
+                fontSize: 14,
+                lineHeight: 15,
+                color,
+              }}
+              numberOfLines={2}
+            >
+              Your payment for booking of ticket has been made successful
+            </RNPaper.HelperText>
+          </View>
         </View>
-      </View>
-      <CustomLine
-        style={{
-          marginBottom: 0,
-        }}
-      />
-    </Pressable>
+        <CustomLine
+          style={{
+            marginBottom: 0,
+          }}
+        />
+      </Pressable>
+    </Swipeable>
   );
 }

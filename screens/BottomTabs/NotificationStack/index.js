@@ -144,13 +144,15 @@ function Notification({ navigation }) {
         ) : (
           <View
             style={{
-              paddingVertical: 10,
+              // paddingVertical: 10,
             }}
           >
-            <Card isNew />
-            <Card />
-            <Card />
-            <Card isNew />
+            <FlatList
+              data={[1, 2, 3, 4, 5]}
+              renderItem={({ item, index }) => (
+                <Card marginBottom={index + 1 === 5 ? 200 : 0} />
+              )}
+            />
           </View>
         )}
       </View>
